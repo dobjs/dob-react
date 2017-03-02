@@ -1,0 +1,37 @@
+{
+  "name": "dynamic-react",
+  "version": "1.0.1",
+  "description": "",
+  "main": "built/index.js",
+  "scripts": {
+    "test": "tsc && ava"
+  },
+  "ava": {
+    "files": [
+      "built/test.js"
+    ]
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ascoders/dynamic-react.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ascoders/dynamic-react/issues"
+  },
+  "homepage": "https://github.com/ascoders/dynamic-react#readme",
+  "peerDependencies": {
+    "react": "^15.4.2"
+  },
+  "devDependencies": {
+    "@types/react": "^15.0.13",
+    "ava": "^0.18.2",
+    "typescript": "^2.2.1",
+    "webpack": "^2.2.1"
+  },
+  "dependencies": {
+    "dynamic-object": "^1.0.1",
+    "shallow-eq": "^1.0.1"
+  }
+}
