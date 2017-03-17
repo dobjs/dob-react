@@ -1,5 +1,5 @@
 import * as React from 'react'
-import {observable} from 'dynamic-object'
+import { observable } from 'dynamic-object'
 
 const specialReactKeys = new Set(['children', 'key', 'ref'])
 
@@ -7,7 +7,7 @@ interface Props {
     [store: string]: object
 }
 
-export default class Provider extends React.Component<Props , any> {
+export default class Provider extends React.Component<Props, any> {
 
     static contextTypes = {
         dyStores: React.PropTypes.object
@@ -19,7 +19,7 @@ export default class Provider extends React.Component<Props , any> {
 
     getChildContext() {
         // 继承 store
-        const stores = Object.assign({}, this.context.mobxStores)
+        const stores = Object.assign({}, this.context.dyStores)
 
         // 添加用户传入的 store
         for (let key in this.props) {

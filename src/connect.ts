@@ -1,5 +1,5 @@
 import * as React from 'react'
-import {observe, Observer} from 'dynamic-object'
+import { observe, Observer } from 'dynamic-object'
 import shallowEqual from 'shallow-eq'
 
 export default (decoratedComponent: any): any => {
