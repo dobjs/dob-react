@@ -1,10 +1,11 @@
 {
   "name": "dynamic-react",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "description": "",
   "main": "built/index.js",
   "scripts": {
-    "test": "tsc && ava"
+    "test": "tsc && ava",
+    "prepublish": "tsc"
   },
   "ava": {
     "files": [
