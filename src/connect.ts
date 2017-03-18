@@ -11,6 +11,8 @@ export default (decoratedComponent: any): any => {
 
         private signal: Observer
 
+        public warppedComponent: React.ReactInstance
+
         shouldComponentUpdate(nextProps: any) {
             if (!shallowEqual(this.props, nextProps)) {
                 return true
@@ -40,6 +42,9 @@ export default (decoratedComponent: any): any => {
             return React.createElement(decoratedComponent, {
                 ...this.context.dyStores,
                 ...this.props,
+                ref: (component) => {
+                    this.warppedComponent = component
+                }
             })
         }
     }
