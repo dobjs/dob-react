@@ -4,6 +4,9 @@ import shallowEqual from 'shallow-eq'
 
 export default (decoratedComponent: any): any => {
     return class WrapComponent extends React.Component<any, any> {
+        // observe 执行的次数
+        private observeRunCount = 0
+
         // 取 context
         static contextTypes = {
             dyStores: React.PropTypes.object
@@ -22,20 +25,24 @@ export default (decoratedComponent: any): any => {
         }
 
         componentWillMount() {
-            this.setNextState()
-
             this.signal = observe(() => {
-                // 初始化执行会因为之前执行过，props相同而被抛弃
+                this.observeRunCount++
                 this.setNextState()
             })
         }
 
+        /**
+         * 取消监听
+         */
         componentWillUnmount() {
             this.signal.unobserve()
         }
 
         setNextState() {
-            this.forceUpdate()
+            // 第一次是初始化，不刷新
+            if (this.observeRunCount > 1) {
+                this.forceUpdate()
+            }
         }
 
         render() {

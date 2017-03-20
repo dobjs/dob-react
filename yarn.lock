@@ -34,7 +34,13 @@
     ansi-styles "^2.2.1"
     esutils "^2.0.2"
 
-"@types/react@^15.0.13":
+"@types/react-test-renderer@^15.4.2":
+  version "15.4.2"
+  resolved "http://registry.npm.taobao.org/@types/react-test-renderer/download/@types/react-test-renderer-15.4.2.tgz#4cc8232db85f13a63411b2487fbe1d3251e11f3f"
+  dependencies:
+    "@types/react" "*"
+
+"@types/react@*", "@types/react@^15.0.13":
   version "15.0.13"
   resolved "https://registry.yarnpkg.com/@types/react/-/react-15.0.13.tgz#7031530b0d1b77941551cda06e5b56b704505f12"
 
@@ -1097,6 +1103,10 @@ delegates@^1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/delegates/-/delegates-1.0.0.tgz#84c6e159b81904fdca59a0ef44cd870d31250f9a"
 
+dependency-inject@^1.0.3:
+  version "1.0.3"
+  resolved "http://registry.npm.taobao.org/dependency-inject/download/dependency-inject-1.0.3.tgz#f49bb1a21a9a1a73da9dfc4415ead370b65999ee"
+
 des.js@^1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/des.js/-/des.js-1.0.0.tgz#c074d2e2aa6a8a9a07dbd61f9a15c2cd83ec8ecc"
@@ -1147,6 +1157,10 @@ duplexer2@^0.1.4:
 dynamic-object@^1.0.1:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/dynamic-object/-/dynamic-object-1.0.1.tgz#d68618a216e8e93211c922a0cae16dfcdf079549"
+
+dynamic-object@^1.0.4:
+  version "1.0.4"
+  resolved "http://registry.npm.taobao.org/dynamic-object/download/dynamic-object-1.0.4.tgz#d05ebe75ab0b73febfcb2e3cd74999a8d7855fc1"
 
 ecc-jsbn@~0.1.1:
   version "0.1.1"
@@ -2620,9 +2634,16 @@ rc@^1.0.1, rc@^1.1.6, rc@~1.1.6:
     minimist "^1.2.0"
     strip-json-comments "~2.0.1"
 
+react-test-renderer@^15.4.2:
+  version "15.4.2"
+  resolved "http://registry.npm.taobao.org/react-test-renderer/download/react-test-renderer-15.4.2.tgz#27e1dff5d26d0e830f99614c487622bc831416f3"
+  dependencies:
+    fbjs "^0.8.4"
+    object-assign "^4.1.0"
+
 react@^15.4.2:
   version "15.4.2"
-  resolved "https://registry.yarnpkg.com/react/-/react-15.4.2.tgz#41f7991b26185392ba9bae96c8889e7e018397ef"
+  resolved "http://registry.npm.taobao.org/react/download/react-15.4.2.tgz#41f7991b26185392ba9bae96c8889e7e018397ef"
   dependencies:
     fbjs "^0.8.4"
     loose-envify "^1.1.0"
