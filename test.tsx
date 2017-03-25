@@ -72,7 +72,7 @@ test('test action and store but not use!', t => {
 
     @Connect
     class App extends React.Component<any, any> {
-        componetWillMount() {
+        componentWillMount() {
             this.props.action.setName('nick')
         }
 
@@ -91,11 +91,62 @@ test('test action and store but not use!', t => {
         </Provider>
     )
 
-    return new Promise(resolve => setInterval(resolve))
+    return new Promise(resolve => setImmediate(resolve))
         .then(() => t.true(runCount === 1))
 })
 
-test('test action and store but use!', t => {
+test('test action and store but use out render!', t => {
+    let runCount = 0
+    let shouldNotChange = 'shouldNotChange'
+
+    class Store {
+        name = 'bob'
+    }
+
+    class Action {
+        @inject(Store) store: Store
+
+        setName(name: string) {
+            this.store.name = name
+        }
+    }
+
+    const container = new Container()
+    container.set(Store, new Store())
+    container.set(Action, new Action())
+
+    @Connect
+    class App extends React.Component<any, any> {
+        componentWillMount() {
+            t.true(this.props.store.name === 'bob') // use it, but not observered
+        }
+
+        componentWillReact() {
+            shouldNotChange = 'changed'
+            t.true(this.props.store.name === 'nick') // can't run
+        }
+
+        render() {
+            runCount++
+
+            return (
+                <span />
+            )
+        }
+    }
+
+    create(
+        <Provider store={container.get(Store)} action={container.get(Action)}>
+            <App />
+        </Provider>
+    )
+
+    return new Promise(resolve => setTimeout(resolve, 200))
+        .then(() => t.true(runCount === 1))
+        .then(() => t.true(shouldNotChange === 'shouldNotChange'))
+})
+
+test('test action and store but use in render!', t => {
     let runCount = 0
 
     class Store {
@@ -116,16 +167,21 @@ test('test action and store but use!', t => {
 
     @Connect
     class App extends React.Component<any, any> {
-        componetWillMount() {
-            t.true(this.props.store.name === 'bob') // use it
-            this.props.action.setName('nick')
+        componentWillMount() {
+            t.true(this.props.store.name === 'bob')
+            setTimeout(() => {
+                this.props.action.setName('nick')
+            }, 10)
         }
 
-        componentWillReceiveProps(nextProps: any) {
-            t.true(nextProps.store.name === 'nick') // so it can run
+        componentWillReact() {
+            t.true(this.props.store.name === 'nick') // so it can run
         }
 
         render() {
+            // use it!
+            this.props.store.name
+
             runCount++
 
             return (
@@ -140,6 +196,6 @@ test('test action and store but use!', t => {
         </Provider>
     )
 
-    return new Promise(resolve => setInterval(resolve))
+    return new Promise(resolve => setTimeout(resolve, 200))
         .then(() => t.true(runCount === 2)) // 2
 })

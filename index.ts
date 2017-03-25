@@ -1,2 +1,2 @@
-export {default as Provider} from './src/provider'
-export {default as Connect} from './src/connect'
+export { default as Provider } from './src/provider'
+export { observer as Connect } from './src/connect'
