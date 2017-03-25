@@ -33,6 +33,7 @@ ReactDOM.render(
 
 ```typescript
 import { inject, Container } from 'dependency-inject'
+import { Action } from 'dynamic-object'
 
 export class Store {
     name = 'bob'
@@ -41,7 +42,7 @@ export class Store {
 export class Action {
     @inject(Store) store: Store
 
-    setName (name: string) {
+    @Action setName (name: string) {
         this.store.name = name
     }
 }
