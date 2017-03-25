@@ -129,8 +129,8 @@ const reactiveMixin: ReactiveMixin = {
 
         // 是否跳过渲染
         let skipRender = false
-        // 是否在强制渲染期间
-        let inForceRender = false
+        // 是否在渲染期间
+        let isRenderingPending = false
 
         // 原始 render
         const baseRender = this.render.bind(this)
@@ -144,6 +144,11 @@ const reactiveMixin: ReactiveMixin = {
 
             if (!this[observerKey]) {
                 signal = observe(() => {
+                    if (isRenderingPending) {
+                        return
+                    }
+                    isRenderingPending = true
+
                     renderResult = baseRender()
 
                     // 执行经典的 componentWillReact
@@ -153,7 +158,6 @@ const reactiveMixin: ReactiveMixin = {
                     // 而且第一次渲染不会调用 forceUpdate
                     if (!self[isUmount] && this[renderCountKey]) {
                         try {
-                            inForceRender = true
                             if (!skipRender) {
                                 React.Component.prototype.forceUpdate.call(self)
                             }
@@ -162,7 +166,7 @@ const reactiveMixin: ReactiveMixin = {
                             signal.unobserve()
                         } finally {
                             // forceUpdate 结束了
-                            inForceRender = false
+                            isRenderingPending = false
                         }
                     }
                 })
@@ -231,7 +235,7 @@ function mixinLifecycleEvents(target: any) {
 /**
  * Observer function / decorator
  */
-export function observer(componentClass: any): any {
+export default function Connect(componentClass: any): any {
     if (
         typeof componentClass === 'function' &&
         (!componentClass.prototype || !componentClass.prototype.render) &&
@@ -239,7 +243,7 @@ export function observer(componentClass: any): any {
         !React.Component.isPrototypeOf(componentClass)
     ) {
         // Stateless function component 就包一层 createClass
-        return observer(
+        return Connect(
             React.createClass({
                 displayName: componentClass.displayName || componentClass.name,
                 propTypes: componentClass.propTypes,
