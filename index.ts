@@ -1,2 +1,2 @@
 export { default as Provider } from './src/provider'
-export Connect from './src/connect'
+export { default as Connect } from './src/connect'
