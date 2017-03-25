@@ -166,9 +166,10 @@ const reactiveMixin: ReactiveMixin = {
                             signal.unobserve()
                         } finally {
                             // forceUpdate 结束了
-                            isRenderingPending = false
                         }
                     }
+
+                    isRenderingPending = false
                 })
             }
             this[observerKey] = signal
