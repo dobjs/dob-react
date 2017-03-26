@@ -1,59 +1,3 @@
-// import * as React from 'react'
-// import { unstable_batchedUpdates } from 'react-dom'
-// import { observe, Observer } from 'dynamic-object'
-// import shallowEqual from 'shallow-eq'
-
-// export default (decoratedComponent: any): any => {
-//     return class WrapComponent extends React.Component<any, any> {
-//         // 取 context
-//         static contextTypes = {
-//             dyStores: React.PropTypes.object
-//         }
-
-//         private signal: Observer
-
-//         public warppedComponent: React.ReactInstance
-
-//         shouldComponentUpdate(nextProps: any) {
-//             if (!shallowEqual(this.props, nextProps)) {
-//                 return true
-//             }
-
-//             return false
-//         }
-
-//         componentWillMount() {
-//             this.signal = observe(() => {
-//                 this.setNextState()
-//             })
-//         }
-
-//         /**
-//          * 取消监听
-//          */
-//         componentWillUnmount() {
-//             this.signal.unobserve()
-//         }
-
-//         setNextState() {
-//             unstable_batchedUpdates(() => {
-//                 this.forceUpdate()
-//             })
-//         }
-
-//         render() {
-//             console.log('connect render')
-//             return React.createElement(decoratedComponent, {
-//                 ...this.context.dyStores,
-//                 ...this.props,
-//                 ref: (component) => {
-//                     this.warppedComponent = component
-//                 }
-//             })
-//         }
-//     }
-// }
-
 import * as React from 'react'
 import * as ReactDOM from 'react-dom'
 import { observe, Observer } from 'dynamic-object'
@@ -183,8 +127,15 @@ const reactiveMixin: ReactiveMixin = {
         const reactiveRender = () => {
             this[renderCountKey] ? this[renderCountKey]++ : this[renderCountKey] = 1
 
+            // 如果 observe 跑过了 renderResult，就不要再执行一遍 baseRender，防止重复调用 render            
             if (renderResult) {
-                return renderResult
+                const tempResult = renderResult
+
+                // 防止 setState 这种没有通过 observe 触发的情况，不应该直接用结果，
+                // 所以要每次清空，如果不是 observe，而是 setState 触发 render，就执行 baseRender
+                renderResult = null
+
+                return tempResult
             }
             return baseRender()
         };
@@ -210,7 +161,7 @@ const reactiveMixin: ReactiveMixin = {
     },
     shouldComponentUpdate: function (nextProps: any, nextState: any) {
         // 任何 state 修改都会重新 render
-        if (this.state !== nextState) {
+        if (!shallowEqual(this.state, nextState)) {
             return true
         }
 
