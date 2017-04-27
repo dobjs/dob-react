@@ -10,9 +10,7 @@ React bindings for dynamic-object
 yarn add dynamic-react --save
 ```
 
-# Usage
-
-## Simple
+# Simple Usage
 
 ```typescript
 import { Provider, Connect } from 'dynamic-react'
@@ -33,7 +31,7 @@ ReactDOM.render(
 , document.getElementById('react-dom'))
 ```
 
-## With dependency-inject
+# Use with dependency-inject
 
 `store.ts`:
 
