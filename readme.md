@@ -33,6 +33,10 @@ ReactDOM.render(
 
 # Use with dependency-inject
 
+```bash
+yarn add dynamic-object dependency-inject --save
+```
+
 `store.ts`:
 
 ```typescript
