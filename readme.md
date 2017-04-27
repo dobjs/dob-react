@@ -4,6 +4,8 @@
 
 React bindings for dynamic-object
 
+Design idea from [Mobx Implementation](https://github.com/ascoders/blog/issues/16)
+
 # Install
 
 ```bash
