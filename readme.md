@@ -1,3 +1,9 @@
+# dynamic-react
+
+<a href="https://travis-ci.org/ascoders/dynamic-react"><img src="https://img.shields.io/travis/ascoders/dynamic-react/master.svg?style=flat" alt="Build Status"></a>
+
+React bindings for dynamic-object
+
 # Install
 
 ```bash
