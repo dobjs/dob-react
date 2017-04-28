@@ -1,12 +1,18 @@
+# dynamic-react
+
+<a href="https://travis-ci.org/ascoders/dynamic-react"><img src="https://img.shields.io/travis/ascoders/dynamic-react/master.svg?style=flat" alt="Build Status"></a>
+
+React bindings for dynamic-object
+
+Design idea from [Mobx Implementation](https://github.com/ascoders/blog/issues/16)
+
 # Install
 
 ```bash
 yarn add dynamic-react --save
 ```
 
-# Usage
-
-## Simple
+# Simple Usage
 
 ```typescript
 import { Provider, Connect } from 'dynamic-react'
@@ -27,7 +33,11 @@ ReactDOM.render(
 , document.getElementById('react-dom'))
 ```
 
-## With dependency-inject
+# Use with dependency-inject
+
+```bash
+yarn add dynamic-object dependency-inject --save
+```
 
 `store.ts`:
 
