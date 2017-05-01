@@ -109,7 +109,6 @@ const reactiveMixin: ReactiveMixin = {
                     if (!self[isUmount] && this[renderCountKey]) {
                         try {
                             if (!skipRender) {
-                                console.log("forceUpdate!!")
                                 React.Component.prototype.forceUpdate.call(self)
                             }
                         } catch (error) {
