@@ -35,6 +35,12 @@ function reportRendering() {
 }
 
 /**
+ * baseRender 初始化未渲染状态
+ * 之所以不用 null 判断是否有渲染，因为 render 函数本身就可以返回 null，所以只好用 symbol 准确判断是否执行了 render
+ */
+const emptyBaseRender = Symbol()
+
+/**
  * 将生命周期聚合到 react 中
  */
 function patch(target: any, funcName: string, runMixinFirst = false) {
@@ -80,7 +86,7 @@ const reactiveMixin: ReactiveMixin = {
         const baseRender = this.render.bind(this)
 
         let self = this
-        let renderResult: any = null
+        let renderResult: any = emptyBaseRender
 
         // 初始化 render        
         const initialRender = () => {
@@ -103,6 +109,7 @@ const reactiveMixin: ReactiveMixin = {
                     if (!self[isUmount] && this[renderCountKey]) {
                         try {
                             if (!skipRender) {
+                                console.log("forceUpdate!!")
                                 React.Component.prototype.forceUpdate.call(self)
                             }
                         } catch (error) {
@@ -128,15 +135,16 @@ const reactiveMixin: ReactiveMixin = {
             this[renderCountKey] ? this[renderCountKey]++ : this[renderCountKey] = 1
 
             // 如果 observe 跑过了 renderResult，就不要再执行一遍 baseRender，防止重复调用 render            
-            if (renderResult) {
+            if (renderResult !== emptyBaseRender) {
                 const tempResult = renderResult
 
                 // 防止 setState 这种没有通过 observe 触发的情况，不应该直接用结果，
                 // 所以要每次清空，如果不是 observe，而是 setState 触发 render，就执行 baseRender
-                renderResult = null
+                renderResult = emptyBaseRender
 
                 return tempResult
             }
+
             return baseRender()
         };
 

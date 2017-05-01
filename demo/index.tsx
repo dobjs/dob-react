@@ -7,55 +7,35 @@ let runCount = 0
 
 class Store {
     name = 'bob'
-    age = 5
-    get count() {
-        return this.name + this.age
-    }
 }
 
 class Action {
     @inject(Store) store: Store
-
-    setName(name: string) {
-        this.store.name = name
-    }
-
-    setAge(age: number) {
-        this.store.age = age
-    }
 }
 
 const container = new Container()
 container.set(Store, new Store())
 container.set(Action, new Action())
 
-@Connect
-class App extends React.Component<any, any> {
-    componentWillMount() {
-        setTimeout(() => {
-            this.props.action.setName('aaa')
-        })
-        setTimeout(() => {
-            this.props.action.setAge(6)
-        })
-    }
+let nested = 0
 
-    renderHeader() {
-        return (
-            <span>{this.props.store.count}</span>
-        )
-    }
+class App extends React.Component<any, any> {
+    appName = "App" + nested++
 
     render() {
         console.log('run')
 
-        return (
-            <span>{this.renderHeader()}</span>
-        )
+        if (nested < 5) {
+            return <ConnectApp />
+        }
+
+        return null as any
     }
 }
 
+const ConnectApp = Connect(App)
+
 ReactDOM.render(
     <Provider store={container.get(Store)} action={container.get(Action)} >
-        <App />
+        <ConnectApp />
     </Provider>, document.getElementById('react-dom'))
