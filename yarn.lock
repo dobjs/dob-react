@@ -1285,9 +1285,12 @@ duplexer2@^0.1.4:
   dependencies:
     readable-stream "^2.0.2"
 
-dynamic-object@^2.0.0:
-  version "2.0.0"
-  resolved "http://registry.npm.taobao.org/dynamic-object/download/dynamic-object-2.0.0.tgz#7d3bed0a948a1051369c7f732f3986be47743231"
+dynamic-object@^2.0.1:
+  version "2.0.2"
+  resolved "https://registry.yarnpkg.com/dynamic-object/-/dynamic-object-2.0.2.tgz#9cc07e732bbc71f302369a89abd64ae1ec9d2739"
+  dependencies:
+    mobx "^3.1.7"
+    react "^15.4.2"
 
 ecc-jsbn@~0.1.1:
   version "0.1.1"

@@ -7,6 +7,10 @@ let runCount = 0
 
 class Store {
     name = 'bob'
+    age = 5
+    get count() {
+        return this.name + this.age
+    }
 }
 
 class Action {
@@ -14,6 +18,10 @@ class Action {
 
     setName(name: string) {
         this.store.name = name
+    }
+
+    setAge(age: number) {
+        this.store.age = age
     }
 }
 
@@ -25,21 +33,24 @@ container.set(Action, new Action())
 class App extends React.Component<any, any> {
     componentWillMount() {
         setTimeout(() => {
-            this.props.action.setName('nick')
-        }, 1000)
-
+            this.props.action.setName('aaa')
+        })
+        setTimeout(() => {
+            this.props.action.setAge(6)
+        })
     }
 
-    componentWillReact() {
-        console.log(this.props.store.name)
+    renderHeader() {
+        return (
+            <span>{this.props.store.count}</span>
+        )
     }
 
     render() {
-        runCount++
-        console.log('run', this.props.store.name)
+        console.log('run')
 
         return (
-            <span />
+            <span>{this.renderHeader()}</span>
         )
     }
 }
