@@ -34,6 +34,10 @@
     ansi-styles "^2.2.1"
     esutils "^2.0.2"
 
+"@types/lodash@^4.14.63":
+  version "4.14.63"
+  resolved "http://registry.npm.taobao.org/@types/lodash/download/@types/lodash-4.14.63.tgz#5ac475f55bfdc62bc88c4239dbc482f2f3bead93"
+
 "@types/react-dom@^0.14.23":
   version "0.14.23"
   resolved "http://registry.npm.taobao.org/@types/react-dom/download/@types/react-dom-0.14.23.tgz#cecfcfad754b4c2765fe5d29b81b301889ad6c2e"
@@ -1285,10 +1289,12 @@ duplexer2@^0.1.4:
   dependencies:
     readable-stream "^2.0.2"
 
-dynamic-object@^2.0.1:
-  version "2.0.2"
-  resolved "https://registry.yarnpkg.com/dynamic-object/-/dynamic-object-2.0.2.tgz#9cc07e732bbc71f302369a89abd64ae1ec9d2739"
+dynamic-object@^2.1.4:
+  version "2.1.4"
+  resolved "http://registry.npm.taobao.org/dynamic-object/download/dynamic-object-2.1.4.tgz#3f7164e355c65a90919dcf83aee3c339d65cb243"
   dependencies:
+    "@types/lodash" "^4.14.63"
+    lodash "^4.17.4"
     mobx "^3.1.7"
     react "^15.4.2"
 
@@ -2348,7 +2354,7 @@ lodash.isequal@^4.5.0:
   version "4.5.0"
   resolved "https://registry.yarnpkg.com/lodash.isequal/-/lodash.isequal-4.5.0.tgz#415c4478f2bcc30120c22ce10ed3226f7d3e18e0"
 
-lodash@^4.14.0, lodash@^4.17.2, lodash@^4.2.0, lodash@^4.5.1:
+lodash@^4.14.0, lodash@^4.17.2, lodash@^4.17.4, lodash@^4.2.0, lodash@^4.5.1:
   version "4.17.4"
   resolved "https://registry.yarnpkg.com/lodash/-/lodash-4.17.4.tgz#78203a4d1c328ae1d86dca6460e369b57f4055ae"
 
