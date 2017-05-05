@@ -112,8 +112,8 @@ const reactiveMixin: ReactiveMixin = {
                                 React.Component.prototype.forceUpdate.call(self)
                             }
                         } catch (error) {
-                            // forceUpdate 出错就取消监听
-                            signal.unobserve()
+                            // forceUpdate 出错就抛出来
+                            throw Error(error)
                         } finally {
                             // forceUpdate 结束了
                         }
