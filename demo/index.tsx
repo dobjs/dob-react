@@ -21,7 +21,7 @@ class UserAction {
     }
 
     setNickname(name: string) {
-        this.store.nickname = name
+        // this.store.nickname = name
     }
 }
 
