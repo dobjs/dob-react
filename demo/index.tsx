@@ -1,41 +1,57 @@
 import * as React from 'react'
 import * as ReactDOM from 'react-dom'
 import { inject, Container } from 'dependency-inject'
+// import { Action } from 'dynamic-object'
 import { Provider, Connect } from '../'
 
-let runCount = 0
-
-class Store {
+class UserStore {
     name = 'bob'
+    age = 15
 }
 
-class Action {
-    @inject(Store) store: Store
-}
+class UserAction {
+    @inject(UserStore) store: UserStore
 
-const container = new Container()
-container.set(Store, new Store())
-container.set(Action, new Action())
+    setName(name: string) {
+        this.store.name = name
+    }
 
-let nested = 0
+    setAge(age: number) {
+        this.store.age = age
+    }
 
-class App extends React.Component<any, any> {
-    appName = "App" + nested++
-
-    render() {
-        console.log('run')
-
-        if (nested < 5) {
-            return <ConnectApp />
-        }
-
-        return null as any
+    setNickname(name: string) {
+        this.store.nickname = name
     }
 }
 
-const ConnectApp = Connect(App)
+@Connect
+class App extends React.Component<any, any> {
+    componentWillMount() {
+        setTimeout(() => {
+            this.props.action.setAge(18)
+        }, 1000)
+    }
+
+    render() {
+        console.log('render')
+        return (
+            <div>{this.props.store.age}</div>
+        )
+    }
+}
+
+
+
+
+
+
+
+const container = new Container()
+container.set(UserStore, new UserStore())
+container.set(UserAction, new UserAction())
 
 ReactDOM.render(
-    <Provider store={container.get(Store)} action={container.get(Action)} >
-        <ConnectApp />
+    <Provider store={container.get(UserStore)} action={container.get(UserAction)} >
+        <App />
     </Provider>, document.getElementById('react-dom'))
