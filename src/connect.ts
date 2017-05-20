@@ -77,8 +77,6 @@ const reactiveMixin: ReactiveMixin = {
         const rootNodeID = this._reactInternalInstance &&
             this._reactInternalInstance._rootNodeID;
 
-        // 是否跳过渲染
-        let skipRender = false
         // 是否在渲染期间
         let isRenderingPending = false
 
@@ -108,9 +106,7 @@ const reactiveMixin: ReactiveMixin = {
                     // 而且第一次渲染不会调用 forceUpdate
                     if (!self[isUmount] && this[renderCountKey]) {
                         try {
-                            if (!skipRender) {
-                                React.Component.prototype.forceUpdate.call(self)
-                            }
+                            React.Component.prototype.forceUpdate.call(self)
                         } catch (error) {
                             // forceUpdate 出错就抛出来
                             throw Error(error)
