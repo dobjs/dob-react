@@ -241,7 +241,6 @@ export default function Connect(componentClass: any): any {
         const container = new Container()
         Object.keys(componentClass).forEach(key => {
             let instance = new componentClass[key]()
-
             container.set(componentClass[key], instance)
         })
 

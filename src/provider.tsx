@@ -27,7 +27,6 @@ export default class Provider extends React.Component<Props, any> {
             }
         }
 
-
         return {
             dyStores: stores
         }
