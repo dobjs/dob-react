@@ -1626,9 +1626,9 @@ depd@1.1.0, depd@~1.1.0:
   version "1.1.0"
   resolved "https://registry.yarnpkg.com/depd/-/depd-1.1.0.tgz#e1bd82c6aab6ced965b97b88b17ed3e528ca18c3"
 
-dependency-inject@^1.0.11:
-  version "1.0.11"
-  resolved "https://registry.yarnpkg.com/dependency-inject/-/dependency-inject-1.0.11.tgz#97d3079645030e25682890cfae09f1d355a28c6f"
+dependency-inject@^1.0.12:
+  version "1.0.12"
+  resolved "https://registry.yarnpkg.com/dependency-inject/-/dependency-inject-1.0.12.tgz#84ec34276e06f1c8f668e81b1f393ffbefb2fa12"
 
 des.js@^1.0.0:
   version "1.0.0"
