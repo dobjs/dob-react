@@ -2,37 +2,20 @@ import * as React from "react"
 import * as ReactDOM from "react-dom"
 import { inject } from 'dependency-inject'
 import { Action, observable } from 'dynamic-object'
-import { Connect } from '../'
+import { Connect, Provider } from '../'
 
-@observable
-class ArticleStore {
-    title = "我是标题党"
-}
-
-class ArticleAction {
-    @inject(ArticleStore) articleStore: ArticleStore
-
-    @Action changeTitle() {
-        this.articleStore.title = "改变了"
-    }
-}
-
-@Connect({
-    store: ArticleStore,
-    action: ArticleAction
-})
-class Article extends React.Component<any, void> {
-    componentWillMount() {
-        setTimeout(() => {
-            this.props.action.changeTitle()
-        }, 1000)
-    }
-
+@Connect
+class App extends React.Component<any, any> {
     render() {
+        console.log(this.props)
         return (
-            <div>{this.props.store.title}</div>
+            <span ></span>
         )
     }
 }
 
-ReactDOM.render(<Article />, document.getElementById("react-dom"))
+ReactDOM.render(
+    <Provider store={{ name: 'bob' }}>
+        <App />
+    </Provider>
+    , document.getElementById("react-dom"))

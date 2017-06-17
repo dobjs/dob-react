@@ -3,6 +3,7 @@ import * as React from 'react'
 import { create } from 'react-test-renderer'
 import { inject, Container } from 'dependency-inject'
 import { Provider, Connect } from './index'
+import { observable } from 'dynamic-object'
 
 test('no args with no error and run once', t => {
     let runCount = 0
@@ -54,6 +55,7 @@ test('test connect inject', t => {
 test('test action and store but not use!', t => {
     let runCount = 0
 
+    @observable
     class Store {
         name = 'bob'
     }
@@ -99,6 +101,7 @@ test('test action and store but use out render!', t => {
     let runCount = 0
     let shouldNotChange = 'shouldNotChange'
 
+    @observable
     class Store {
         name = 'bob'
     }
@@ -149,6 +152,7 @@ test('test action and store but use out render!', t => {
 test('test action and store but use in render!', t => {
     let runCount = 0
 
+    @observable
     class Store {
         name = 'bob'
     }

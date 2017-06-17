@@ -1,6 +1,6 @@
 import * as React from 'react'
 import * as ReactDOM from 'react-dom'
-import { observe, IObserver, observable } from 'dynamic-object'
+import { observe, IObserver } from 'dynamic-object'
 import shallowEqual from 'shallow-eq'
 import { Container } from 'dependency-inject'
 
