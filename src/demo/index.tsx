@@ -1,38 +1,37 @@
 import * as React from "react"
 import * as ReactDOM from "react-dom"
+import { inject } from 'dependency-inject'
 import { Action } from 'dynamic-object'
-import { Provider, Connect } from '../'
+import { Connect } from '../'
 
-class UserStore {
-    name = 'bob'
+class ArticleStore {
+    title = "我是标题党"
 }
 
-class UserAction {
-    store = new UserStore()
+class ArticleAction {
+    @inject(ArticleStore) articleStore: ArticleStore
 
-    @Action setName(name: string) {
-        this.store.name = name
+    @Action changeTitle() {
+        this.articleStore.title = "改变了"
     }
 }
 
-@Connect
-class App extends React.Component<any, any> {
+@Connect({
+    store: ArticleStore,
+    action: ArticleAction
+})
+class Article extends React.Component<any, void> {
+    componentWillMount() {
+        setTimeout(() => {
+            this.props.action.changeTitle()
+        }, 1000)
+    }
+
     render() {
         return (
-            <span>
-                {this.props.store.name}
-                <button onClick={() => {
-                    this.props.action.setName("jack")
-                }}>updateName</button>
-            </span>
+            <div>{this.props.store.title}</div>
         )
     }
 }
 
-const userAction = new UserAction()
-
-ReactDOM.render(
-    <Provider action={userAction} store={userAction.store}>
-        <App />
-    </Provider>
-    , document.getElementById('react-dom'))
+ReactDOM.render(<Article />, document.getElementById("react-dom"))

@@ -246,7 +246,7 @@ export default function Connect(componentClass: any): any {
             instance = observable(instance)
             for (let instanceKey in instance) {
                 if (typeof instance[instanceKey] === 'function') {
-                    instance[instanceKey] = instance[instanceKey].bind(instance[key])
+                    instance[instanceKey] = instance[instanceKey].bind(instance)
                 }
             }
 
