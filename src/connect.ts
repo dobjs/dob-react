@@ -1,6 +1,6 @@
 import * as React from 'react'
 import * as ReactDOM from 'react-dom'
-import { observe, Observer, observable } from 'dynamic-object'
+import { observe, IObserver, observable } from 'dynamic-object'
 import shallowEqual from 'shallow-eq'
 import { Container } from 'dependency-inject'
 
@@ -89,7 +89,7 @@ const reactiveMixin: ReactiveMixin = {
 
         // 初始化 render        
         const initialRender = () => {
-            let signal: Observer
+            let signal: IObserver
 
             if (!this[observerKey]) {
                 signal = observe(() => {
