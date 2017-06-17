@@ -93,7 +93,6 @@ const reactiveMixin: ReactiveMixin = {
 
             if (!this[observerKey]) {
                 signal = observe(() => {
-                    console.log("observe aaa")
                     if (isRenderingPending) {
                         return
                     }
