@@ -1,7 +1,8 @@
 import * as React from 'react'
 import * as ReactDOM from 'react-dom'
-import { observe, Observer } from 'dynamic-object'
+import { observe, Observer, observable } from 'dynamic-object'
 import shallowEqual from 'shallow-eq'
+import { Container } from 'dependency-inject'
 
 /**
  * 组件是否已销毁
@@ -187,32 +188,7 @@ function mixinLifecycleEvents(target: any) {
     }
 }
 
-/**
- * Observer function / decorator
- */
-export default function Connect(componentClass: any): any {
-    if (
-        typeof componentClass === 'function' &&
-        (!componentClass.prototype || !componentClass.prototype.render) &&
-        !componentClass.isReactClass &&
-        !React.Component.isPrototypeOf(componentClass)
-    ) {
-        // Stateless function component 就包一层 createClass
-        return Connect(
-            React.createClass({
-                displayName: componentClass.displayName || componentClass.name,
-                propTypes: componentClass.propTypes,
-                contextTypes: componentClass.contextTypes,
-                getDefaultProps: function () {
-                    return componentClass.defaultProps;
-                },
-                render: function () {
-                    return componentClass.call(this, this.props, this.context);
-                }
-            })
-        )
-    }
-
+function mixinAndInject(componentClass: any, extraInjection = {}) {
     const target = componentClass.prototype || componentClass
     mixinLifecycleEvents(target)
 
@@ -226,7 +202,67 @@ export default function Connect(componentClass: any): any {
             return React.createElement(componentClass, {
                 ...this.context.dyStores,
                 ...this.props,
+                ...extraInjection
             })
         }
     }
+}
+
+/**
+ * Observer function / decorator
+ */
+export default function Connect(componentClass: any): any {
+    if (
+        typeof componentClass === 'function' &&
+        (!componentClass.prototype || !componentClass.prototype.render) &&
+        !componentClass.isReactClass &&
+        !React.Component.isPrototypeOf(componentClass)
+    ) {
+        // Stateless function component
+        // 包一层 createClass
+        return Connect(
+            React.createClass({
+                displayName: componentClass.displayName || componentClass.name,
+                propTypes: componentClass.propTypes,
+                contextTypes: componentClass.contextTypes,
+                getDefaultProps: function () {
+                    return componentClass.defaultProps;
+                },
+                render: function () {
+                    return componentClass.call(this, this.props, this.context);
+                }
+            })
+        )
+    } else if (typeof componentClass === 'object') {
+        // 以下的情况
+        // @Connect({
+        //   store: SomeClass
+        // })
+        const container = new Container()
+        Object.keys(componentClass).forEach(key => {
+            let instance = new componentClass[key]()
+
+            // 动态化
+            instance = observable(instance)
+            for (let instanceKey in instance) {
+                if (typeof instance[instanceKey] === 'function') {
+                    instance[instanceKey] = instance[instanceKey].bind(instance[key])
+                }
+            }
+
+            container.set(componentClass[key], instance)
+        })
+
+        const injectObj = Object.keys(componentClass).reduce((obj, key) => {
+            obj[key] = container.get(componentClass[key])
+            return obj
+        }, {} as any)
+
+        return (realComponentClass: any) => {
+            return mixinAndInject(realComponentClass, injectObj)
+        }
+    }
+
+    // @Connect 直接包裹组件
+    return mixinAndInject(componentClass)
 }
