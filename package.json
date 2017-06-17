@@ -7,7 +7,7 @@
     "test": "tsc && ava",
     "prepublish": "rm -rf built && tsc && babel built --out-dir built && npm run build",
     "demo": "run-react start",
-    "build": "webpack --config built/scripts/webpack.config.js"
+    "build": "webpack --config built/src/scripts/webpack.config.js"
   },
   "ava": {
     "files": [
