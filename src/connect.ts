@@ -242,14 +242,6 @@ export default function Connect(componentClass: any): any {
         Object.keys(componentClass).forEach(key => {
             let instance = new componentClass[key]()
 
-            // 动态化
-            instance = observable(instance)
-            for (let instanceKey in instance) {
-                if (typeof instance[instanceKey] === 'function') {
-                    instance[instanceKey] = instance[instanceKey].bind(instance)
-                }
-            }
-
             container.set(componentClass[key], instance)
         })
 

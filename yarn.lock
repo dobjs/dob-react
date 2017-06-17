@@ -1689,9 +1689,9 @@ duplexer2@^0.1.4:
   dependencies:
     readable-stream "^2.0.2"
 
-dynamic-object@^2.1.17:
-  version "2.1.17"
-  resolved "https://registry.yarnpkg.com/dynamic-object/-/dynamic-object-2.1.17.tgz#b19b3510de6c9584dde5c6c9d77fcee830c3f677"
+dynamic-object@^2.1.18:
+  version "2.1.18"
+  resolved "https://registry.yarnpkg.com/dynamic-object/-/dynamic-object-2.1.18.tgz#967caf31edbd9fc191b7fef5d3629510a1c3762d"
   dependencies:
     "@types/lodash" "^4.14.63"
     immutable "^3.8.1"

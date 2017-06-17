@@ -1,9 +1,10 @@
 import * as React from "react"
 import * as ReactDOM from "react-dom"
 import { inject } from 'dependency-inject'
-import { Action } from 'dynamic-object'
+import { Action, observable } from 'dynamic-object'
 import { Connect } from '../'
 
+@observable
 class ArticleStore {
     title = "我是标题党"
 }

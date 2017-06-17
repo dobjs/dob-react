@@ -21,21 +21,6 @@ export default class Provider extends React.Component<Props, any> {
         // 继承 store
         const stores = Object.assign({}, this.context.dyStores)
 
-        // 添加用户传入的 store
-        for (let key in this.props) {
-            if (!specialReactKeys.has(key)) {
-                const store: any = this.props[key]
-
-                stores[key] = observable(store)
-                // 将所有 function 的 this 指向 proxy
-                for (let storeKey in store) {
-                    if (typeof store[storeKey] === 'function') {
-                        store[storeKey] = store[storeKey].bind(stores[key])
-                    }
-                }
-            }
-        }
-
         return {
             dyStores: stores
         }
