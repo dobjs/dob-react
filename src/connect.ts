@@ -238,8 +238,18 @@ export default function Connect(componentClass: any): any {
         // @Connect({
         //   store: SomeClass
         // })
+        const injectObj: any = {}
+        for (let functionName in componentClass) {
+            injectObj[functionName] = componentClass[functionName]
+        }
+        Object.getOwnPropertyNames(Object.getPrototypeOf(componentClass))
+            .filter(functionName => functionName !== "constructor")
+            .forEach(functionName => {
+                injectObj[functionName] = componentClass[functionName]
+            })
+
         return (realComponentClass: any) => {
-            return mixinAndInject(realComponentClass, componentClass)
+            return mixinAndInject(realComponentClass, injectObj)
         }
     }
 
