@@ -238,22 +238,28 @@ export default function Connect(componentClass: any): any {
         // @Connect({
         //   store: SomeClass
         // })
-        const container = new Container()
-        Object.keys(componentClass).forEach(key => {
-            let instance = new componentClass[key]()
-            container.set(componentClass[key], instance)
-        })
-
-        const injectObj = Object.keys(componentClass).reduce((obj, key) => {
-            obj[key] = container.get(componentClass[key])
-            return obj
-        }, {} as any)
-
         return (realComponentClass: any) => {
-            return mixinAndInject(realComponentClass, injectObj)
+            return mixinAndInject(realComponentClass, componentClass)
         }
     }
 
     // @Connect 直接包裹组件
     return mixinAndInject(componentClass)
+}
+
+function autoInject(obj: any) {
+    const container = new Container()
+    Object.keys(obj).forEach(key => {
+        let instance = new obj[key]()
+        container.set(obj[key], instance)
+    })
+
+    const injectObj = Object.keys(obj).reduce((obj, key) => {
+        obj[key] = container.get(obj[key])
+        return obj
+    }, {} as any)
+
+    return (realComponentClass: any) => {
+        return mixinAndInject(realComponentClass, injectObj)
+    }
 }
