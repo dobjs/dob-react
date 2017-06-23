@@ -242,11 +242,6 @@ export default function Connect(componentClass: any): any {
         for (let functionName in componentClass) {
             injectObj[functionName] = componentClass[functionName]
         }
-        Object.getOwnPropertyNames(Object.getPrototypeOf(componentClass))
-            .filter(functionName => functionName !== "constructor")
-            .forEach(functionName => {
-                injectObj[functionName] = componentClass[functionName]
-            })
 
         return (realComponentClass: any) => {
             return mixinAndInject(realComponentClass, injectObj)
@@ -255,21 +250,4 @@ export default function Connect(componentClass: any): any {
 
     // @Connect 直接包裹组件
     return mixinAndInject(componentClass)
-}
-
-function autoInject(obj: any) {
-    const container = new Container()
-    Object.keys(obj).forEach(key => {
-        let instance = new obj[key]()
-        container.set(obj[key], instance)
-    })
-
-    const injectObj = Object.keys(obj).reduce((obj, key) => {
-        obj[key] = container.get(obj[key])
-        return obj
-    }, {} as any)
-
-    return (realComponentClass: any) => {
-        return mixinAndInject(realComponentClass, injectObj)
-    }
 }
