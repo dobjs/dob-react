@@ -3,7 +3,7 @@ import * as React from 'react'
 import { create } from 'react-test-renderer'
 import { inject, Container } from 'dependency-inject'
 import { Provider, Connect } from './index'
-import { observable } from 'dynamic-object'
+import { observable } from 'dob'
 
 test('no args with no error and run once', t => {
     let runCount = 0

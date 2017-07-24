@@ -1,7 +1,7 @@
 import * as React from "react"
 import * as ReactDOM from "react-dom"
 import { inject } from 'dependency-inject'
-import { Action, observable } from 'dynamic-object'
+import { Action, observable } from 'dob'
 import { Connect, Provider } from '../'
 
 @Connect
