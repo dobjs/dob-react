@@ -1,21 +1,19 @@
-# dynamic-react
+# dob-react &middot; [![CircleCI Status](https://img.shields.io/travis/ascoders/dob-react/master.svg?style=flat)](https://travis-ci.org/ascoders/dob-react) [![npm version](https://img.shields.io/npm/v/dob-react.svg?style=flat)](https://www.npmjs.com/package/dob-react) [![code coverage](https://img.shields.io/codecov/c/github/ascoders/dob-react/master.svg)](https://codecov.io/github/ascoders/dob-react)
 
-<a href="https://travis-ci.org/ascoders/dynamic-react"><img src="https://img.shields.io/travis/ascoders/dynamic-react/master.svg?style=flat" alt="Build Status"></a>
-
-React bindings for dynamic-object
+React bindings for dob
 
 Design idea from [Mobx Implementation](https://github.com/ascoders/blog/issues/16)
 
 # Install
 
 ```bash
-yarn add dynamic-react --save
+yarn add dob-react --save
 ```
 
 # Simple Usage
 
 ```typescript
-import { Provider, Connect } from 'dynamic-react'
+import { Provider, Connect } from 'dob-react'
 
 @Connect
 class App extends React.Component <any, any> {
@@ -36,14 +34,14 @@ ReactDOM.render(
 # Use with dependency-inject
 
 ```bash
-yarn add dynamic-object dependency-inject --save
+yarn add dob dependency-inject --save
 ```
 
 `store.ts`:
 
 ```typescript
 import { inject, Container } from 'dependency-inject'
-import { Action } from 'dynamic-object'
+import { Action } from 'dob'
 
 export class Store {
     name = 'bob'
@@ -67,7 +65,7 @@ export { container }
 `app.ts`
 
 ```typescript
-import { Provider, Connect } from 'dynamic-react'
+import { Provider, Connect } from 'dob-react'
 import { Store, Action, container } from './store'
 
 @Connect
