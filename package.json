@@ -4,7 +4,8 @@
   "description": "",
   "main": "built/index.js",
   "scripts": {
-    "test": "tsc && ava",
+    "test": "tsc && nyc --reporter=lcov --reporter=text --reporter=json ava",
+    "posttest": "codecov -f coverage/*.json -t bc4c34e2-24cb-4b05-8b97-7f30395e642b",
     "prepublish": "rm -rf built && tsc && babel built --out-dir built && npm run build",
     "start": "run-react start",
     "build": "webpack --config built/scripts/webpack.config.js"
@@ -12,7 +13,7 @@
   "types": "src/index.ts",
   "ava": {
     "files": [
-      "built/test.js"
+      "built/**/*.test.js"
     ]
   },
   "repository": {
@@ -40,6 +41,8 @@
     "babel-plugin-transform-es2015-classes": "^6.24.1",
     "babel-preset-es2015": "^6.24.0",
     "babel-preset-stage-0": "^6.22.0",
+    "codecov": "^2.3.0",
+    "nyc": "^11.1.0",
     "react": "^15.4.2",
     "react-test-renderer": "^15.4.2",
     "run-react": "^2.0.1",
