@@ -5,7 +5,7 @@
   "main": "built/index.js",
   "scripts": {
     "test": "tsc && nyc --reporter=lcov --reporter=text --reporter=json ava",
-    "posttest": "codecov -f coverage/*.json -t bc4c34e2-24cb-4b05-8b97-7f30395e642b",
+    "posttest": "codecov -f coverage/*.json -t e25fe2bb-a132-42cf-b126-6e62b7c7517e",
     "prepublish": "rm -rf built && tsc && babel built --out-dir built && npm run build",
     "start": "run-react start",
     "build": "webpack --config built/scripts/webpack.config.js"
