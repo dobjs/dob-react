@@ -1,6 +1,6 @@
 import * as React from 'react'
 import * as ReactDOM from 'react-dom'
-import { observe, IObserver } from 'dob'
+import { Reaction } from 'dob'
 import shallowEqual from 'shallow-eq'
 import { Container } from 'dependency-inject'
 
@@ -12,7 +12,7 @@ const isUmount = Symbol()
 /**
  * observer 对象存放的 key
  */
-const observerKey = Symbol()
+const reactionKey = Symbol()
 
 /**
  * render 次数
@@ -84,30 +84,28 @@ const reactiveMixin: ReactiveMixin = {
         // 原始 render
         const baseRender = this.render.bind(this)
 
-        let self = this
         let renderResult: any = emptyBaseRender
+
+        // 核心 reaction
+        let reaction: Reaction
 
         // 初始化 render        
         const initialRender = () => {
-            let signal: IObserver
-
-            if (!this[observerKey]) {
-                signal = observe(() => {
+            if (!this[reactionKey]) {
+                reaction = new Reaction(`${initialName}.render`, () => {
                     if (isRenderingPending) {
                         return
                     }
                     isRenderingPending = true
 
-                    renderResult = baseRender()
-
                     // 执行经典的 componentWillReact
-                    typeof self.componentWillReact === 'function' && this[renderCountKey] && self.componentWillReact()
+                    typeof this.componentWillReact === 'function' && this[renderCountKey] && this.componentWillReact()
 
                     // 如果组件没有被销毁，尝试调用 forceUpdate
                     // 而且第一次渲染不会调用 forceUpdate
-                    if (!self[isUmount] && this[renderCountKey]) {
+                    if (!this[isUmount] && this[renderCountKey]) {
                         try {
-                            React.Component.prototype.forceUpdate.call(self)
+                            React.Component.prototype.forceUpdate.call(this)
                         } catch (error) {
                             // forceUpdate 出错就抛出来
                             throw Error(error)
@@ -119,15 +117,18 @@ const reactiveMixin: ReactiveMixin = {
                     isRenderingPending = false
                 })
             }
-            this[observerKey] = signal
+            this[reactionKey] = reaction
 
             // 之后都用 reactiveRender 作 render
             this.render = reactiveRender
             return reactiveRender()
         }
 
-
         const reactiveRender = () => {
+            reaction.track(() => {
+                renderResult = baseRender()
+            })
+
             this[renderCountKey] ? this[renderCountKey]++ : this[renderCountKey] = 1
 
             // 如果 observe 跑过了 renderResult，就不要再执行一遍 baseRender，防止重复调用 render            
@@ -149,7 +150,7 @@ const reactiveMixin: ReactiveMixin = {
     },
     componentWillUnmount: function () {
         // 取消 observe 监听
-        this[observerKey] && this[observerKey].unobserve()
+        this[reactionKey] && this[reactionKey].dispose()
 
         this[isUmount] = true
     },
