@@ -89,49 +89,50 @@ const reactiveMixin: ReactiveMixin = {
         // 核心 reaction
         let reaction: Reaction
 
-        // 初始化 render        
+        // 初始化 render
         const initialRender = () => {
-            if (!this[reactionKey]) {
-                reaction = new Reaction(`${initialName}.render`, () => {
-                    if (isRenderingPending) {
-                        return
+            reaction = new Reaction(`${initialName}.render`, () => {
+                if (isRenderingPending) {
+                    return
+                }
+                isRenderingPending = true
+
+                // 执行经典的 componentWillReact
+                typeof this.componentWillReact === 'function' && this[renderCountKey] && this.componentWillReact()
+
+                // 如果组件没有被销毁，尝试调用 forceUpdate
+                // 而且第一次渲染不会调用 forceUpdate
+                if (!this[isUmount] && this[renderCountKey]) {
+                    try {
+                        React.Component.prototype.forceUpdate.call(this)
+                    } catch (error) {
+                        // forceUpdate 出错就抛出来
+                        throw Error(error)
+                    } finally {
+                        // forceUpdate 结束了
                     }
-                    isRenderingPending = true
+                }
 
-                    // 执行经典的 componentWillReact
-                    typeof this.componentWillReact === 'function' && this[renderCountKey] && this.componentWillReact()
+                isRenderingPending = false
+            })
 
-                    // 如果组件没有被销毁，尝试调用 forceUpdate
-                    // 而且第一次渲染不会调用 forceUpdate
-                    if (!this[isUmount] && this[renderCountKey]) {
-                        try {
-                            React.Component.prototype.forceUpdate.call(this)
-                        } catch (error) {
-                            // forceUpdate 出错就抛出来
-                            throw Error(error)
-                        } finally {
-                            // forceUpdate 结束了
-                        }
-                    }
-
-                    isRenderingPending = false
-                })
-            }
             this[reactionKey] = reaction
 
             // 之后都用 reactiveRender 作 render
             this.render = reactiveRender
+
             return reactiveRender()
         }
 
         const reactiveRender = () => {
+            console.log('reactiveRender, reaction:', reaction, initialName)
             reaction.track(() => {
                 renderResult = baseRender()
             })
 
             this[renderCountKey] ? this[renderCountKey]++ : this[renderCountKey] = 1
 
-            // 如果 observe 跑过了 renderResult，就不要再执行一遍 baseRender，防止重复调用 render            
+            // 如果 observe 跑过了 renderResult，就不要再执行一遍 baseRender，防止重复调用 render
             if (renderResult !== emptyBaseRender) {
                 const tempResult = renderResult
 
@@ -145,7 +146,7 @@ const reactiveMixin: ReactiveMixin = {
             return baseRender()
         };
 
-        // 默认用初始化 render        
+        // 默认用初始化 render
         this.render = initialRender
     },
     componentWillUnmount: function () {
