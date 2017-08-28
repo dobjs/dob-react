@@ -125,7 +125,6 @@ const reactiveMixin: ReactiveMixin = {
         }
 
         const reactiveRender = () => {
-            console.log('reactiveRender, reaction:', reaction, initialName)
             reaction.track(() => {
                 renderResult = baseRender()
             })
