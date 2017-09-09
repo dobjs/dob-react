@@ -189,39 +189,10 @@ function mixinLifecycleEvents(target: any) {
     }
 }
 
-function mixinAndInject(componentClass: any, extraInjection = {}) {
-    const target = componentClass.prototype || componentClass
-    mixinLifecycleEvents(target)
-
-    return class InjectWrapper extends React.Component<any, any>{
-        // 取 context
-        static contextTypes = {
-            dyStores: React.PropTypes.object
-        }
-
-        render() {
-            return React.createElement(componentClass, {
-                ...this.context.dyStores,
-                ...this.props,
-                ...extraInjection
-            })
-        }
-    }
-}
-
-/**
- * Observer function / decorator
- */
-export default function Connect(componentClass: any): any {
-    if (
-        typeof componentClass === 'function' &&
-        (!componentClass.prototype || !componentClass.prototype.render) &&
-        !componentClass.isReactClass &&
-        !React.Component.isPrototypeOf(componentClass)
-    ) {
-        // Stateless function component
-        // 包一层 createClass
-        return Connect(
+function mixinAndInject(componentClass: any, extraInjection: Object | Function = {}): any {
+    if (!isReactFunction(componentClass)) {
+        // stateless react function
+        return mixinAndInject(
             React.createClass({
                 displayName: componentClass.displayName || componentClass.name,
                 propTypes: componentClass.propTypes,
@@ -232,23 +203,82 @@ export default function Connect(componentClass: any): any {
                 render: function () {
                     return componentClass.call(this, this.props, this.context);
                 }
-            })
+            }),
+            extraInjection
         )
-    } else if (typeof componentClass === 'object') {
-        // 以下的情况
-        // @Connect({
-        //   store: SomeClass
-        // })
-        const injectObj: any = {}
-        for (let functionName in componentClass) {
-            injectObj[functionName] = componentClass[functionName]
+    }
+
+    const target = componentClass.prototype || componentClass
+    mixinLifecycleEvents(target)
+
+    return class InjectWrapper extends React.Component<any, any>{
+        // 取 context
+        static contextTypes = {
+            dyStores: React.PropTypes.object
         }
 
-        return (realComponentClass: any) => {
-            return mixinAndInject(realComponentClass, injectObj)
+        render() {
+            if (typeof extraInjection === 'object') {
+                return React.createElement(componentClass, {
+                    ...this.context.dyStores,
+                    ...this.props,
+                    ...extraInjection
+                })
+            } else if (typeof extraInjection === 'function') {
+                return React.createElement(componentClass, {
+                    ...this.context.dyStores,
+                    ...this.props,
+                    ...extraInjection(this.context.dyStores)
+                })
+            }
+        }
+    }
+}
+
+function isReactFunction(obj: any) {
+    if (typeof obj === 'function') {
+        if (
+            (obj.prototype && obj.prototype.render) ||
+            obj.isReactClass ||
+            React.Component.isPrototypeOf(obj)
+        ) {
+            return true
         }
     }
 
-    // @Connect 直接包裹组件
-    return mixinAndInject(componentClass)
+    return false
+}
+
+/**
+ * Observer function / decorator
+ */
+export default function Connect(target: any, propertyKey?: string, descriptor?: PropertyDescriptor): any
+export default function Connect(injectExtension: any): any
+export default function Connect<T={}>(mapStateToProps?: (state?: T) => any): any
+export default function Connect(target: any): any {
+    // @Connect
+    if (isReactFunction(target)) {
+        return mixinAndInject(target)
+    }
+
+    // @Connect(object)
+    if (typeof target === 'object') {
+        return (realComponentClass: any) => {
+            return mixinAndInject(realComponentClass, target)
+        }
+    }
+
+    // @Connect(function)
+    if (typeof target === 'function') {
+        return (realComponentClass: any) => {
+            return mixinAndInject(realComponentClass, target)
+        }
+    }
+
+    // Connect()(App)
+    if (!target) {
+        return (realComponentClass: any) => {
+            return mixinAndInject(realComponentClass)
+        }
+    }
 }

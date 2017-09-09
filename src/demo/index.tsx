@@ -23,8 +23,8 @@ class UserAction {
     userStore: UserStore
 
     @Action async setName(name: string) {
-        await wait(100)
         this.userStore.name = name
+        this.setAge(66)
     }
 
     @Action async setAge(age: number) {
@@ -41,7 +41,7 @@ const stores = injectFactory({
 class App extends React.Component<any, any> {
     componentWillMount() {
         setTimeout(() => {
-            this.props.UserAction.setAge(30)
+            this.props.UserAction.setName('aaaa')
         }, 1000)
     }
 
@@ -54,7 +54,7 @@ class App extends React.Component<any, any> {
                     click to change:
                 {this.props.UserStore.name}
                 </button>
-                <Module1 />
+                {React.createElement(Module1)}
             </div>
         )
     }
@@ -63,7 +63,6 @@ class App extends React.Component<any, any> {
 @Connect
 class Module1 extends React.Component<any, any> {
     render() {
-        console.log(this.refs['aa'])
         return (
             <div ref="aa">{this.props.UserStore.age}</div>
         )

@@ -31,59 +31,101 @@ ReactDOM.render(
 , document.getElementById('react-dom'))
 ```
 
-# Use with dependency-inject
+# Connect
 
-```bash
-yarn add dob dependency-inject --save
-```
-
-`store.ts`:
+Connect all in provider:
 
 ```typescript
-import { inject, Container } from 'dependency-inject'
-import { Action } from 'dob'
-
-export class Store {
-    name = 'bob'
-}
-
-export class Action {
-    @inject(Store) store: Store
-
-    @Action setName (name: string) {
-        this.store.name = name
-    }
-}
-
-const container = new Container()
-container.set(Store, new Store())
-container.set(Action, new Action())
-
-export { container }
-```
-
-`app.ts`
-
-```typescript
-import { Provider, Connect } from 'dob-react'
-import { Store, Action, container } from './store'
-
 @Connect
 class App extends React.Component <any, any> {
-    componentWillMount () {
-        this.props.action.setName('nick')
-    }
-
     render() {
         return (
-            <span>{this.props.name}</span>
+            <span>{this.props.store.name}</span>
         )
     }
 }
 
 ReactDOM.render(
-    <Provider store={container.get(Store)} action={container.get(Action)}>
-        <App />
-    </Provider>
+    <Provider store={{ name: 'bob' }}> <App /> </Provider>
+, document.getElementById('react-dom'))
+```
+
+Connect extra data:
+
+```typescript
+@Connect({
+    customStore: {
+        name: 'lucy'
+    }
+})
+class App extends React.Component <any, any> {
+    render() {
+        return (
+            <span>{this.props.store.name}</span>
+            <span>{this.props.customStore.name}</span>
+        )
+    }
+}
+
+ReactDOM.render(
+    <Provider store={{ name: 'bob' }}> <App /> </Provider>
+, document.getElementById('react-dom'))
+```
+
+Map state to props:
+
+```typescript
+@Connect(state => {
+    return {
+        customName: 'custom' + state.store.name'
+    }
+})
+class App extends React.Component <any, any> {
+    render() {
+        return (
+            <span>{this.props.store.name}</span>
+            <span>{this.props.store.customName}</span>
+        )
+    }
+}
+
+ReactDOM.render(
+    <Provider store={{ name: 'bob' }}> <App /> </Provider>
+, document.getElementById('react-dom'))
+```
+
+Functional call:
+
+```typescript
+class App extends React.Component <any, any> {
+    render() {
+        return (
+            <span>{this.props.store.name}</span>
+        )
+    }
+}
+
+const ConnectApp = Connect()(App)
+// const ConnectApp = Connect({ ... })(App)
+// const ConnectApp = Connect( state => { ... })(App)
+
+ReactDOM.render(
+    <Provider store={{ name: 'bob' }}> <App /> </Provider>
+, document.getElementById('react-dom'))
+```
+
+Support stateless function:
+
+```typescript
+function App(props) {
+    return (
+        <span>{props.store.name}</span>
+    )
+}
+
+const ConnectApp = Connect()(App)
+
+ReactDOM.render(
+    <Provider store={{ name: 'bob' }}> <App /> </Provider>
 , document.getElementById('react-dom'))
 ```
