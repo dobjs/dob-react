@@ -14,65 +14,48 @@ function wait(time: number) {
     })
 }
 
+const book = {
+    title: 'ccc'
+}
+
 @observable
 class UserStore {
-    name = '小明'
-    age = 18
+    books = new Set([book])
 }
 
 class UserAction {
     @inject(UserStore)
     userStore: UserStore
 
-    @Action async setName(name: string) {
-        this.userStore.name = name
-        this.setAge(66)
-    }
-
-    @Action async setAge(age: number) {
-        this.userStore.age = age
+    @Action async setTitle() {
+        this.userStore.books.add({
+            title: 'ddd'
+        })
     }
 }
 
-const stores = injectFactory({
+@Connect(injectFactory({
     UserStore,
     UserAction
-})
-
-@Connect
+}))
 class App extends React.Component<any, any> {
-    componentWillMount() {
-        setTimeout(() => {
-            this.props.UserAction.setName('aaaa')
-        }, 1000)
-    }
-
     render() {
+        this.props.UserStore.books.forEach((book: any) => {
+            book
+        })
+
         return (
             <div>
                 <button
-                    onClick={this.props.UserAction.setAge.bind(this, 20)}
+                    onClick={this.props.UserAction.setTitle}
                 >
                     click to change:
-                {this.props.UserStore.name}
                 </button>
-                {React.createElement(Module1)}
             </div>
         )
     }
 }
 
-@Connect
-class Module1 extends React.Component<any, any> {
-    render() {
-        return (
-            <div ref="aa">{this.props.UserStore.age}</div>
-        )
-    }
-}
-
 ReactDOM.render(
-    <Provider {...stores}>
-        <App />
-    </Provider>
+    <App />
     , document.getElementById("react-dom"))
