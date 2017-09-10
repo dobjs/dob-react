@@ -5,6 +5,13 @@ import { inject, Container, injectFactory } from 'dependency-inject'
 import { Provider, Connect } from '../index'
 import { observable } from 'dob'
 
+function immediate(fn: Function) {
+    return new Promise(resolve => setImmediate(() => {
+        fn()
+        resolve()
+    }));
+}
+
 test('no args with no error and run once', t => {
     let runCount = 0
 
@@ -492,4 +499,76 @@ test('functional store connect', t => {
 
     return Promise.resolve()
         .then(() => t.true(runCount === 1)) // 2
+})
+
+test('unmount will disConnect', t => {
+    let runCount = 0
+
+    @observable
+    class Store {
+        name = 'lucy'
+    }
+
+    class Action {
+        @inject(Store) store: Store
+
+        setName(name: string) {
+            this.store.name = name
+        }
+    }
+
+    const stores = injectFactory({ Store, Action })
+
+    @Connect(stores)
+    class App extends React.Component<any, any> {
+        render() {
+            runCount++
+
+            return (
+                <span>{this.props.Store.name}</span>
+            )
+        }
+    }
+
+    @Connect(stores)
+    class Container extends React.Component<any, any> {
+        async componentWillMount() {
+            await immediate(() => {
+                this.props.Action.setName('nick')
+            })
+            await immediate(() => {
+                this.setAppHidden()
+            })
+            await immediate(() => {
+                this.props.Action.setName('lucy')
+            })
+        }
+
+        state = {
+            showApp: true
+        }
+
+        setAppHidden() {
+            this.setState({
+                showApp: false
+            })
+        }
+
+        render() {
+            if (!this.state.showApp) {
+                return null
+            }
+
+            return (
+                <App />
+            )
+        }
+    }
+
+    create(
+        <Container />
+    )
+
+    return new Promise(resolve => setTimeout(resolve))
+        .then(() => t.true(runCount === 2))
 })
