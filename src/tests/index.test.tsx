@@ -5,11 +5,22 @@ import { inject, Container, injectFactory } from 'dependency-inject'
 import { Provider, Connect } from '../index'
 import { observable } from 'dob'
 
-function immediate(fn: Function) {
-    return new Promise(resolve => setImmediate(() => {
+function immediate(fn: Function, time?: number) {
+    if (time) {
+        return new Promise(resolve => setTimeout(() => {
+            fn()
+            resolve()
+        }, time));
+    }
+
+    return new Promise(resolve => process.nextTick(() => {
         fn()
         resolve()
     }));
+}
+
+function timeout(time?: number) {
+    return new Promise(resolve => setTimeout(resolve, time))
 }
 
 test('no args with no error and run once', t => {
@@ -31,7 +42,7 @@ test('no args with no error and run once', t => {
         </Provider>
     )
 
-    return new Promise(resolve => setInterval(resolve))
+    return timeout()
         .then(() => t.true(runCount === 1))
 })
 
@@ -55,7 +66,7 @@ test('test connect inject', t => {
         </Provider>
     )
 
-    return new Promise(resolve => setInterval(resolve))
+    return timeout()
         .then(() => t.true(runCount === 1))
 })
 
@@ -100,7 +111,7 @@ test('test action and store but not use!', t => {
         </Provider>
     )
 
-    return new Promise(resolve => setImmediate(resolve))
+    return timeout()
         .then(() => t.true(runCount === 1))
 })
 
@@ -151,7 +162,7 @@ test('test action and store but use out render!', t => {
         </Provider>
     )
 
-    return new Promise(resolve => setTimeout(resolve, 200))
+    return timeout()
         .then(() => t.true(runCount === 1))
         .then(() => t.true(shouldNotChange === 'shouldNotChange'))
 })
@@ -178,11 +189,11 @@ test('test action and store but use in render!', t => {
 
     @Connect
     class App extends React.Component<any, any> {
-        componentWillMount() {
+        async componentWillMount() {
             t.true(this.props.store.name === 'bob')
-            setTimeout(() => {
+            await immediate(() => {
                 this.props.action.setName('nick')
-            }, 10)
+            })
         }
 
         componentWillReact() {
@@ -207,7 +218,7 @@ test('test action and store but use in render!', t => {
         </Provider>
     )
 
-    return new Promise(resolve => setTimeout(resolve, 200))
+    return timeout()
         .then(() => t.true(runCount === 2)) // 2
 })
 
@@ -234,11 +245,11 @@ test('innert store connect', t => {
         action: stores.Action
     })
     class App extends React.Component<any, any> {
-        componentWillMount() {
+        async componentWillMount() {
             t.true(this.props.store.name === 'bob')
-            setTimeout(() => {
+            await immediate(() => {
                 this.props.action.setName('nick')
-            }, 10)
+            })
         }
 
         componentWillReact() {
@@ -261,7 +272,7 @@ test('innert store connect', t => {
         <App />
     )
 
-    return new Promise(resolve => setTimeout(resolve, 200))
+    return timeout()
         .then(() => t.true(runCount === 2)) // 2
 })
 
@@ -301,19 +312,19 @@ test('innert store connect and global provider', t => {
         action: stores.Action
     })
     class App extends React.Component<any, any> {
-        componentWillMount() {
+        async componentWillMount() {
             t.true(this.props.store.name === 'bob')
             t.true(this.props.globalStore.age === 1)
-            setTimeout(() => {
+            await immediate(() => {
                 this.props.action.setName('nick')
-            }, 10)
-            setTimeout(() => {
+            })
+            await immediate(() => {
                 this.props.globalAction.setAge(2)
-            }, 20)
+            })
         }
 
         componentWillReact() {
-            t.true(this.props.store.name === 'nick') // so it can run
+            t.true(this.props.store.name === 'nick')
         }
 
         render() {
@@ -335,8 +346,10 @@ test('innert store connect and global provider', t => {
         </Provider>
     )
 
-    return new Promise(resolve => setTimeout(resolve, 200))
-        .then(() => t.true(runCount === 3)) // 2
+    return timeout()
+        .then(() => {
+            t.true(runCount === 3)
+        })
 })
 
 test('functional react component connect', t => {
@@ -375,7 +388,7 @@ test('functional react component connect', t => {
         </Provider>
     )
 
-    return Promise.resolve()
+    return timeout()
         .then(() => t.true(runCount === 1))
 })
 
@@ -417,7 +430,7 @@ test('functional call classable react component connect', t => {
         </Provider>
     )
 
-    return Promise.resolve()
+    return timeout()
         .then(() => t.true(runCount === 1))
 })
 
@@ -455,7 +468,7 @@ test('functional react component inner connect', t => {
         <ConnectApp />
     )
 
-    return Promise.resolve()
+    return timeout()
         .then(() => t.true(runCount === 1))
 })
 
@@ -497,7 +510,7 @@ test('functional store connect', t => {
         </Provider>
     )
 
-    return Promise.resolve()
+    return timeout()
         .then(() => t.true(runCount === 1)) // 2
 })
 
@@ -569,6 +582,6 @@ test('unmount will disConnect', t => {
         <Container />
     )
 
-    return new Promise(resolve => setTimeout(resolve))
+    return timeout()
         .then(() => t.true(runCount === 2))
 })
