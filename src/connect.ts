@@ -103,14 +103,7 @@ const reactiveMixin: ReactiveMixin = {
                 // 如果组件没有被销毁，尝试调用 forceUpdate
                 // 而且第一次渲染不会调用 forceUpdate
                 if (!this[isUmount] && this[renderCountKey]) {
-                    try {
-                        React.Component.prototype.forceUpdate.call(this)
-                    } catch (error) {
-                        // forceUpdate 出错就抛出来
-                        throw Error(error)
-                    } finally {
-                        // forceUpdate 结束了
-                    }
+                    React.Component.prototype.forceUpdate.call(this)
                 }
 
                 isRenderingPending = false
