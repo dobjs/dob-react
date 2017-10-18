@@ -1,8 +1,11 @@
 import * as React from 'react'
 import * as ReactDOM from 'react-dom'
 import { Reaction } from 'dob'
-import shallowEqual from 'shallow-eq'
-import { Container } from 'dependency-inject'
+import * as PropTypes from 'prop-types'
+import * as createClass from 'create-react-class'
+import { globalState } from './global-state'
+import { DebugWrapper } from './debug'
+import { handleReRender } from './utils'
 
 /**
  * 组件是否已销毁
@@ -24,22 +27,21 @@ interface ReactiveMixin {
 }
 
 /**
- * dev tool support
- */
-let isDevtoolsEnabled = false
-
-/**
- * 开发工具使用，报告渲染
- */
-function reportRendering() {
-    console.log('render')
-}
-
-/**
  * baseRender 初始化未渲染状态
  * 之所以不用 null 判断是否有渲染，因为 render 函数本身就可以返回 null，所以只好用 symbol 准确判断是否执行了 render
  */
 const emptyBaseRender = Symbol()
+
+/**
+ * 报告该组件触发了 dob 渲染
+ */
+function reportTrack(reactElement: React.ReactElement<any>) {
+    if (!globalState.useDebug || !reactElement.props[handleReRender]) {
+        return
+    }
+
+    Promise.resolve().then(reactElement.props[handleReRender])
+}
 
 /**
  * 将生命周期聚合到 react 中
@@ -120,6 +122,8 @@ const reactiveMixin: ReactiveMixin = {
         const reactiveRender = () => {
             reaction.track(() => {
                 renderResult = baseRender()
+
+                reportTrack(this)
             })
 
             this[renderCountKey] ? this[renderCountKey]++ : this[renderCountKey] = 1
@@ -146,24 +150,6 @@ const reactiveMixin: ReactiveMixin = {
         this[reactionKey] && this[reactionKey].dispose()
 
         this[isUmount] = true
-    },
-    componentDidMount: function () {
-        if (isDevtoolsEnabled) {
-            reportRendering()
-        }
-    },
-    componentDidUpdate: function () {
-        if (isDevtoolsEnabled) {
-            reportRendering()
-        }
-    },
-    shouldComponentUpdate: function (nextProps: any, nextState: any) {
-        // 任何 state 修改都会重新 render
-        if (!shallowEqual(this.state, nextState)) {
-            return true
-        }
-
-        return !shallowEqual(this.props, nextProps)
     }
 }
 
@@ -172,9 +158,7 @@ const reactiveMixin: ReactiveMixin = {
  */
 function mixinLifecycleEvents(target: any) {
     patch(target, 'componentWillMount', true)
-    patch(target, 'componentDidMount')
     patch(target, 'componentWillUnmount')
-    patch(target, 'componentDidUpdate')
 
     if (!target.shouldComponentUpdate) {
         // 只有原对象没有 shouldComponentUpdate 的时候，才使用 mixins
@@ -186,7 +170,7 @@ function mixinAndInject(componentClass: any, extraInjection: Object | Function =
     if (!isReactFunction(componentClass)) {
         // stateless react function
         return mixinAndInject(
-            React.createClass({
+            createClass({
                 displayName: componentClass.displayName || componentClass.name,
                 propTypes: componentClass.propTypes,
                 contextTypes: componentClass.contextTypes,
@@ -207,23 +191,31 @@ function mixinAndInject(componentClass: any, extraInjection: Object | Function =
     return class InjectWrapper extends React.Component<any, any>{
         // 取 context
         static contextTypes = {
-            dyStores: React.PropTypes.object
+            dyStores: PropTypes.object
         }
 
         render() {
+            let wrappedComponent: React.ReactElement<any> = null
+
             if (typeof extraInjection === 'object') {
-                return React.createElement(componentClass, {
+                wrappedComponent = React.createElement(componentClass, {
                     ...this.context.dyStores,
                     ...this.props,
                     ...extraInjection
                 })
             } else if (typeof extraInjection === 'function') {
-                return React.createElement(componentClass, {
+                wrappedComponent = React.createElement(componentClass, {
                     ...this.context.dyStores,
                     ...this.props,
                     ...extraInjection(this.context.dyStores)
                 })
             }
+
+            if (globalState.useDebug) {
+                return React.createElement(DebugWrapper, null, wrappedComponent)
+            }
+
+            return wrappedComponent
         }
     }
 }
@@ -249,26 +241,26 @@ export default function Connect(target: any, propertyKey?: string, descriptor?: 
 export default function Connect(injectExtension: any): any
 export default function Connect<T={}>(mapStateToProps?: (state?: T) => any): any
 export default function Connect(target: any): any {
-    // @Connect
+    // usage: @Connect
     if (isReactFunction(target)) {
         return mixinAndInject(target)
     }
 
-    // @Connect(object)
+    // usage: @Connect(object)
     if (typeof target === 'object') {
         return (realComponentClass: any) => {
             return mixinAndInject(realComponentClass, target)
         }
     }
 
-    // @Connect(function)
+    // usage: @Connect(functional)
     if (typeof target === 'function') {
         return (realComponentClass: any) => {
             return mixinAndInject(realComponentClass, target)
         }
     }
 
-    // Connect()(App)
+    // usage: Connect()(App)
     if (!target) {
         return (realComponentClass: any) => {
             return mixinAndInject(realComponentClass)

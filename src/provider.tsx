@@ -1,4 +1,5 @@
 import * as React from 'react'
+import * as PropTypes from 'prop-types'
 
 const specialReactKeys = new Set(['children', 'key', 'ref'])
 
@@ -9,11 +10,11 @@ interface Props {
 export default class Provider extends React.Component<Props, any> {
 
     static contextTypes = {
-        dyStores: React.PropTypes.object
+        dyStores: PropTypes.object
     }
 
     static childContextTypes = {
-        dyStores: React.PropTypes.object.isRequired
+        dyStores: PropTypes.object.isRequired
     }
 
     getChildContext() {

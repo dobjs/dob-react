@@ -1,6 +1,6 @@
 {
   "name": "dob-react",
-  "version": "2.1.8",
+  "version": "2.1.9",
   "description": "",
   "main": "built/index.js",
   "scripts": {
@@ -14,6 +14,15 @@
   "ava": {
     "files": [
       "built/**/*.test.js"
+    ]
+  },
+  "run-react": {
+    "entrys": [
+      "src/demo/index.tsx"
+    ],
+    "dlls": [
+      "react",
+      "react-dom"
     ]
   },
   "repository": {
@@ -30,11 +39,14 @@
     "react": "^15.4.2"
   },
   "devDependencies": {
-    "@types/node": "^7.0.43",
-    "@types/react": "^15.6.2",
-    "@types/react-dom": "^0.14.23",
-    "@types/react-test-renderer": "^15.5.4",
-    "@types/webpack": "^2.2.16",
+    "@types/create-react-class": "*",
+    "@types/node": "*",
+    "@types/prop-types": "*",
+    "@types/react": "*",
+    "@types/react-dom": "*",
+    "@types/react-router-dom": "*",
+    "@types/react-test-renderer": "*",
+    "@types/webpack": "*",
     "ava": "^0.18.2",
     "babel-cli": "^6.26.0",
     "babel-plugin-transform-class-properties": "^6.24.1",
@@ -42,17 +54,21 @@
     "babel-preset-es2015": "^6.24.0",
     "babel-preset-stage-0": "^6.22.0",
     "codecov": "^2.3.0",
+    "dependency-inject": "^1.1.0",
     "nyc": "^11.2.1",
-    "react": "^15.4.2",
-    "react-test-renderer": "^15.4.2",
+    "react": "^16.0.0",
+    "react-dom": "^16.0.0",
+    "react-router": "^4.2.0",
+    "react-router-dom": "^4.2.2",
+    "react-test-renderer": "^16.0.0",
     "run-react": "^2.1.2",
     "typescript": "^2.5.2",
     "webpack": "^2.6.1"
   },
   "dependencies": {
-    "dependency-inject": "^1.1.0",
-    "dob": "^2.3.8",
-    "react-dom": "^15.4.2",
-    "shallow-eq": "^1.0.3"
+    "create-react-class": "^15.6.2",
+    "dob": "^2.4.3",
+    "prop-types": "^15.6.0",
+    "styled-components": "^2.2.1"
   }
 }
