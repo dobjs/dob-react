@@ -39,7 +39,7 @@ export class DebugWrapper extends React.PureComponent<Props, State>{
   }
 
   static childContextTypes = {
-    dyDebug: PropTypes.object.isRequired
+    dyDebug: PropTypes.object
   }
 
   public state = new State()

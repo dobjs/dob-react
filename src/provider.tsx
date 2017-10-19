@@ -20,7 +20,7 @@ export default class Provider extends React.Component<Props, any> {
 
     static childContextTypes = {
         dyStores: PropTypes.object.isRequired,
-        dyDebug: PropTypes.object.isRequired
+        dyDebug: PropTypes.object
     }
 
     getChildContext() {
