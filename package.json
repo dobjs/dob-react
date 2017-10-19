@@ -1,6 +1,6 @@
 {
   "name": "dob-react",
-  "version": "2.1.9",
+  "version": "2.2.0",
   "description": "",
   "main": "built/index.js",
   "scripts": {
@@ -36,7 +36,7 @@
   },
   "homepage": "https://github.com/ascoders/dob-react#readme",
   "peerDependencies": {
-    "react": "^15.4.2"
+    "react": "*"
   },
   "devDependencies": {
     "@types/create-react-class": "*",
@@ -67,7 +67,7 @@
   },
   "dependencies": {
     "create-react-class": "^15.6.2",
-    "dob": "^2.4.3",
+    "dob": "^2.4.8",
     "prop-types": "^15.6.0",
     "styled-components": "^2.2.1"
   }

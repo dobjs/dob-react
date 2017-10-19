@@ -1,12 +1,14 @@
 import { globalState } from '../global-state'
 export { DebugWrapper } from './debug.component'
-import { startDebug as dobStartDebug, stopDebug as dobStopDebug } from 'dob'
+export { ToolBox } from './tool-box/tool-box.component'
+import { startDebug as dobStartDebug, stopDebug as dobStopDebug, useStrict } from 'dob'
 
 /**
  * 开启调试模式
  */
 export function startDebug() {
   globalState.useDebug = true
+  useStrict()
   dobStartDebug()
 }
 

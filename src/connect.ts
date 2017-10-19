@@ -35,12 +35,14 @@ const emptyBaseRender = Symbol()
 /**
  * 报告该组件触发了 dob 渲染
  */
-function reportTrack(reactElement: React.ReactElement<any>) {
+function reportTrack(reactElement: React.ReactElement<any>, debugId: number) {
     if (!globalState.useDebug || !reactElement.props[handleReRender]) {
         return
     }
 
-    Promise.resolve().then(reactElement.props[handleReRender])
+    Promise.resolve().then(() => {
+        reactElement.props[handleReRender](debugId)
+    })
 }
 
 /**
@@ -120,10 +122,10 @@ const reactiveMixin: ReactiveMixin = {
         }
 
         const reactiveRender = () => {
-            reaction.track(() => {
+            reaction.track((debugId) => {
                 renderResult = baseRender()
 
-                reportTrack(this)
+                reportTrack(this, debugId)
             })
 
             this[renderCountKey] ? this[renderCountKey]++ : this[renderCountKey] = 1

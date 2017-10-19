@@ -12,7 +12,7 @@ export default class Page1 extends PureComponent<Props, State> {
 
   public render() {
     const Articles = this.props.ArticleStore.articles.map((article, index) => {
-      return <Article key={index} index={index} article={article} />
+      return <Article key={article.id} index={index} article={article} />
     })
 
     return (
@@ -20,6 +20,10 @@ export default class Page1 extends PureComponent<Props, State> {
         <button onClick={() => {
           this.props.ArticleAction.addArticle()
         }}>添加文章</button>
+
+        <button onClick={() => {
+          this.props.ArticleAction.multipleAction('123')
+        }}>添加文章并修改文章名为123</button>
 
         <ul>
           {Articles}
