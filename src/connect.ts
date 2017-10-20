@@ -4,7 +4,6 @@ import { Reaction } from 'dob'
 import * as PropTypes from 'prop-types'
 import * as createClass from 'create-react-class'
 import { globalState } from './global-state'
-import { handleReRender } from './utils'
 import shallowEqual from 'shallow-eq'
 
 /**
@@ -36,12 +35,12 @@ const emptyBaseRender = Symbol()
  * 报告该组件触发了 dob 渲染
  */
 function reportTrack(reactElement: React.ReactElement<any>, debugId: number) {
-    if (!globalState.useDebug || !reactElement.props[handleReRender]) {
+    if (!globalState.useDebug || !reactElement.props[globalState.handleReRender]) {
         return
     }
 
     Promise.resolve().then(() => {
-        reactElement.props[handleReRender](debugId)
+        reactElement.props[globalState.handleReRender](debugId)
     })
 }
 
