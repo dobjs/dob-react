@@ -4,8 +4,8 @@ import { Reaction } from 'dob'
 import * as PropTypes from 'prop-types'
 import * as createClass from 'create-react-class'
 import { globalState } from './global-state'
-import { DebugWrapper } from './debug'
 import { handleReRender } from './utils'
+import shallowEqual from 'shallow-eq'
 
 /**
  * 组件是否已销毁
@@ -152,6 +152,14 @@ const reactiveMixin: ReactiveMixin = {
         this[reactionKey] && this[reactionKey].dispose()
 
         this[isUmount] = true
+    },
+    shouldComponentUpdate: function (nextProps: any, nextState: any) {
+        // 任何 state 修改都会重新 render
+        if (!shallowEqual(this.state, nextState)) {
+            return true
+        }
+
+        return !shallowEqual(this.props, nextProps)
     }
 }
 
@@ -162,7 +170,7 @@ function mixinLifecycleEvents(target: any) {
     patch(target, 'componentWillMount', true)
     patch(target, 'componentWillUnmount')
 
-    if (!target.shouldComponentUpdate) {
+    if (!target.shouldComponentUpdate && !target.isPureReactComponent) {
         // 只有原对象没有 shouldComponentUpdate 的时候，才使用 mixins
         target.shouldComponentUpdate = reactiveMixin.shouldComponentUpdate
     }
@@ -214,7 +222,7 @@ function mixinAndInject(componentClass: any, extraInjection: Object | Function =
             }
 
             if (globalState.useDebug) {
-                return React.createElement(DebugWrapper, null, wrappedComponent)
+                return React.createElement(globalState.DebugWrapper, null, wrappedComponent)
             }
 
             return wrappedComponent

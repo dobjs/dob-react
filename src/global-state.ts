@@ -7,6 +7,18 @@ class GlobalState {
    * 是否开启 debug
    */
   public useDebug = false
+  /**
+   * provider 计数器，如果页面拥有多个 provider，聚合在一起显示
+   */
+  public providerCounter = 0
+  /**
+   * debug 工具栏
+   */
+  public DebugToolBox: React.ComponentClass = null
+  /**
+   * debug 每个组件的 wrapper，通过实现这两个组件，完成与 dob-react 的调试模式对接
+   */
+  public DebugWrapper: React.ComponentClass = null
 }
 
 let globalState = new GlobalState()

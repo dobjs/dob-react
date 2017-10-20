@@ -1,6 +1,6 @@
 {
   "name": "dob-react",
-  "version": "2.2.1",
+  "version": "2.3.0",
   "description": "",
   "main": "built/index.js",
   "scripts": {
@@ -39,14 +39,6 @@
     "react": "*"
   },
   "devDependencies": {
-    "@types/create-react-class": "*",
-    "@types/node": "*",
-    "@types/prop-types": "*",
-    "@types/react": "*",
-    "@types/react-dom": "*",
-    "@types/react-router-dom": "*",
-    "@types/react-test-renderer": "*",
-    "@types/webpack": "*",
     "ava": "^0.18.2",
     "babel-cli": "^6.26.0",
     "babel-plugin-transform-class-properties": "^6.24.1",
@@ -55,20 +47,31 @@
     "babel-preset-stage-0": "^6.22.0",
     "codecov": "^2.3.0",
     "dependency-inject": "^1.1.0",
+    "lz-string": "^1.4.4",
     "nyc": "^11.2.1",
     "react": "^16.0.0",
+    "react-color": "^2.13.8",
     "react-dom": "^16.0.0",
     "react-router": "^4.2.0",
     "react-router-dom": "^4.2.2",
     "react-test-renderer": "^16.0.0",
     "run-react": "^2.1.2",
+    "sortablejs": "^1.6.1",
     "typescript": "^2.5.2",
     "webpack": "^2.6.1"
   },
   "dependencies": {
+    "@types/create-react-class": "*",
+    "@types/node": "*",
+    "@types/prop-types": "*",
+    "@types/react": "*",
+    "@types/react-dom": "*",
+    "@types/react-router-dom": "*",
+    "@types/react-test-renderer": "*",
+    "@types/webpack": "*",
     "create-react-class": "^15.6.2",
-    "dob": "^2.4.8",
+    "dob": "^2.4.13",
     "prop-types": "^15.6.0",
-    "styled-components": "^2.2.1"
+    "shallow-eq": "^1.0.5"
   }
 }

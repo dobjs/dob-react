@@ -1,6 +1,5 @@
 import * as React from 'react'
 import * as PropTypes from 'prop-types'
-import { ToolBox } from './debug'
 import { globalState } from './global-state'
 import { IDebugInfo } from 'dob'
 import { Event } from './event'
@@ -56,7 +55,11 @@ export default class Provider extends React.Component<Props, any> {
     }
 
     render() {
-        if (globalState.useDebug) {
+        globalState.providerCounter++
+
+        if (globalState.useDebug && globalState.providerCounter === 1) {
+            const ToolBox = globalState.DebugToolBox
+            // 即使在 debug 模式下，ToolBox 也只会实例化一个
             return (
                 <ToolBox>
                     {this.props.children}
