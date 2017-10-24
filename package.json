@@ -1,6 +1,6 @@
 {
   "name": "dob-react",
-  "version": "2.3.2",
+  "version": "2.3.3",
   "description": "",
   "main": "built/index.js",
   "scripts": {
@@ -43,6 +43,10 @@
     "@types/node": "*",
     "@types/react-test-renderer": "*",
     "@types/webpack": "*",
+    "@types/create-react-class": "*",
+    "@types/prop-types": "*",
+    "@types/react": "*",
+    "@types/react-dom": "*",
     "ava": "^0.18.2",
     "babel-cli": "^6.26.0",
     "babel-plugin-transform-class-properties": "^6.24.1",
@@ -65,10 +69,6 @@
     "webpack": "^2.6.1"
   },
   "dependencies": {
-    "@types/create-react-class": "*",
-    "@types/prop-types": "*",
-    "@types/react": "*",
-    "@types/react-dom": "*",
     "create-react-class": "^15.6.2",
     "dob": "^2.4.13",
     "prop-types": "^15.6.0",
