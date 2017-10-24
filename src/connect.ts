@@ -262,7 +262,7 @@ export default function Connect(target: any): any {
         }
     }
 
-    // usage: @Connect(functional)
+    // usage: @Connect(function)
     if (typeof target === 'function') {
         return (realComponentClass: any) => {
             return mixinAndInject(realComponentClass, target)
