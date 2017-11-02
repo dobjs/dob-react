@@ -10,7 +10,7 @@ Design idea from [Mobx Implementation](https://github.com/ascoders/blog/issues/1
 npm i dob-react
 ```
 
-### Online demo
+## Online demo
 
 Here is a basic [demo](https://jsfiddle.net/yp90Lep9/21/), and here is a [demo](https://jsfiddle.net/g19ehhgu/11/) with fractal.
 
