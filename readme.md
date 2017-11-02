@@ -7,7 +7,7 @@ Design idea from [Mobx Implementation](https://github.com/ascoders/blog/issues/1
 ## Install
 
 ```bash
-yarn add dob-react --save
+npm i dob-react
 ```
 
 ### Online demo
