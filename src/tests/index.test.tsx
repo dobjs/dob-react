@@ -13,10 +13,9 @@ function immediate(fn: Function, time?: number) {
         }, time));
     }
 
-    return new Promise(resolve => process.nextTick(() => {
+    return Promise.resolve().then(() => {
         fn()
-        resolve()
-    }));
+    })
 }
 
 function timeout(time?: number) {
