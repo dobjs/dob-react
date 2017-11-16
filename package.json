@@ -1,6 +1,6 @@
 {
   "name": "dob-react",
-  "version": "2.4.2",
+  "version": "2.4.3",
   "description": "",
   "main": "built/index.js",
   "scripts": {
@@ -36,7 +36,9 @@
   },
   "homepage": "https://github.com/ascoders/dob-react#readme",
   "peerDependencies": {
-    "react": "*"
+    "react": "*",
+    "@types/create-react-class": "*",
+    "@types/prop-types": "*"
   },
   "devDependencies": {
     "@types/react-router-dom": "*",
@@ -67,8 +69,6 @@
     "webpack": "^2.6.1"
   },
   "dependencies": {
-    "@types/create-react-class": "*",
-    "@types/prop-types": "*",
     "create-react-class": "^15.6.2",
     "dob": "^2.5.4",
     "prop-types": "^15.6.0",
