@@ -57,10 +57,10 @@ function patch(target: any, funcName: string, runMixinFirst = false) {
         target[funcName] = mixinFunc
     } else {
         // 将两个函数串起来执行
-        target[funcName] = runMixinFirst === true ? function (...args: any[]) {
+        target[funcName] = runMixinFirst === true ? function (this: any, ...args: any[]) {
             mixinFunc.apply(this, args)
             base.apply(this, args)
-        } : function (...args: any[]) {
+        } : function (this: any, ...args: any[]) {
             base.apply(this, args)
             mixinFunc.apply(this, args)
         }
@@ -74,7 +74,7 @@ const reactiveMixin: ReactiveMixin = {
     componentWillMount: function () {
         // 当前组件名
         const initialName = this.displayName || this.name || this.constructor &&
-            (this.constructor.displayName || this.constructor.name) ||
+            ((this.constructor as any).displayName || this.constructor.name) ||
             "<component>"
 
         // 当前节点 id
@@ -124,7 +124,7 @@ const reactiveMixin: ReactiveMixin = {
             reaction.track((debugId) => {
                 renderResult = baseRender()
 
-                reportTrack(this, debugId)
+                reportTrack(this as React.ReactElement<any>, debugId)
             })
 
             this[renderCountKey] ? this[renderCountKey]++ : this[renderCountKey] = 1
@@ -204,7 +204,7 @@ function mixinAndInject(componentClass: any, extraInjection: Object | Function =
         }
 
         render() {
-            let wrappedComponent: React.ReactElement<any> = null
+            let wrappedComponent: React.ReactElement<any> | null = null
 
             if (typeof extraInjection === 'object') {
                 wrappedComponent = React.createElement(componentClass, {
@@ -221,7 +221,9 @@ function mixinAndInject(componentClass: any, extraInjection: Object | Function =
             }
 
             if (globalState.useDebug) {
-                return React.createElement(globalState.DebugWrapper, null, wrappedComponent)
+                if (globalState.DebugWrapper !== null) {
+                    return React.createElement(globalState.DebugWrapper, undefined, wrappedComponent)
+                }
             }
 
             return wrappedComponent

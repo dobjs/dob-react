@@ -58,7 +58,7 @@ export default class Provider extends React.Component<Props, any> {
         globalState.providerCounter++
 
         if (globalState.useDebug && globalState.providerCounter === 1) {
-            const ToolBox = globalState.DebugToolBox
+            const ToolBox = globalState.DebugToolBox as any
             // 即使在 debug 模式下，ToolBox 也只会实例化一个
             return (
                 <ToolBox>

@@ -369,7 +369,7 @@ test('functional react component connect', t => {
 
     const stores = injectFactory({ Store, Action })
 
-    function App() {
+    function App(this: any) {
         t.true(this.props.Store.name === 'bob')
 
         runCount++
@@ -451,7 +451,7 @@ test('functional react component inner connect', t => {
 
     const stores = injectFactory({ Store, Action })
 
-    function App() {
+    function App(this: any) {
         t.true(this.props.Store.name === 'bob')
 
         runCount++
@@ -489,7 +489,7 @@ test('functional store connect', t => {
 
     @Connect<typeof stores>(state => {
         return {
-            user: state.Store.user
+            user: state!.Store!.user
         }
     })
     class App extends React.Component<any, any> {

@@ -1,6 +1,6 @@
 {
   "name": "dob-react",
-  "version": "2.4.3",
+  "version": "2.4.4",
   "description": "",
   "main": "built/index.js",
   "scripts": {
@@ -8,7 +8,7 @@
     "posttest": "codecov -f coverage/*.json -t e25fe2bb-a132-42cf-b126-6e62b7c7517e",
     "prepublish": "rm -rf built && tsc && babel built --out-dir built && npm run build",
     "start": "run-react develop",
-    "build": "webpack --config built/scripts/webpack.config.js"
+    "build": "run-react production"
   },
   "types": "src/index.ts",
   "ava": {
@@ -23,7 +23,11 @@
     "dlls": [
       "react",
       "react-dom"
-    ]
+    ],
+    "production": {
+      "path": "built",
+      "filename": "bundle.js"
+    }
   },
   "repository": {
     "type": "git",
@@ -41,12 +45,12 @@
     "@types/prop-types": "*"
   },
   "devDependencies": {
-    "@types/react-router-dom": "*",
     "@types/node": "*",
-    "@types/react-test-renderer": "*",
-    "@types/webpack": "*",
     "@types/react": "*",
     "@types/react-dom": "*",
+    "@types/react-router-dom": "*",
+    "@types/react-test-renderer": "*",
+    "@types/webpack": "*",
     "ava": "^0.18.2",
     "babel-cli": "^6.26.0",
     "babel-plugin-transform-class-properties": "^6.24.1",
@@ -63,14 +67,14 @@
     "react-router": "^4.2.0",
     "react-router-dom": "^4.2.2",
     "react-test-renderer": "^16.0.0",
-    "run-react": "^2.1.2",
+    "run-react": "^2.2.2",
     "sortablejs": "^1.6.1",
     "typescript": "^2.5.2",
     "webpack": "^2.6.1"
   },
   "dependencies": {
     "create-react-class": "^15.6.2",
-    "dob": "^2.5.4",
+    "dob": "^2.5.5",
     "prop-types": "^15.6.0",
     "shallow-eq": "^1.0.5"
   }
