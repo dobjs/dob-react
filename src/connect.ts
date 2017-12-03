@@ -1,10 +1,11 @@
 import * as React from 'react'
 import * as ReactDOM from 'react-dom'
 import { Reaction } from 'dob'
-import * as PropTypes from 'prop-types'
-import * as createClass from 'create-react-class'
 import { globalState } from './global-state'
 import shallowEqual from 'shallow-eq'
+
+const PropTypes = require('prop-types')
+const createClass = require('create-react-class')
 
 /**
  * 组件是否已销毁

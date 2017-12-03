@@ -1,13 +1,14 @@
 import * as React from 'react'
-import * as PropTypes from 'prop-types'
 import { globalState } from './global-state'
 import { IDebugInfo } from 'dob'
 import { Event } from './event'
 
+const PropTypes = require('prop-types')
+
 const specialReactKeys = new Set(['children', 'key', 'ref'])
 
 interface Props {
-    [store: string]: object
+    [store: string]: object | undefined
 }
 
 export default class Provider extends React.Component<Props, any> {
