@@ -74,7 +74,7 @@
   },
   "dependencies": {
     "create-react-class": "^15.6.2",
-    "dob": "^2.5.6",
+    "dob": "^2.5.7",
     "prop-types": "^15.6.0",
     "shallow-eq": "^1.0.5"
   }

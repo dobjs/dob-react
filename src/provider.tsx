@@ -1,7 +1,6 @@
 import * as React from 'react'
 import { globalState } from './global-state'
-import { IDebugInfo } from 'dob'
-import { Event } from './event'
+import { IDebugInfo, Event } from 'dob'
 
 const PropTypes = require('prop-types')
 
