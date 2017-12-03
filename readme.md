@@ -1,6 +1,6 @@
 # dob-react &middot; [![CircleCI Status](https://img.shields.io/travis/dobjs/dob-react/master.svg?style=flat)](https://travis-ci.org/dobjs/dob-react) [![npm version](https://img.shields.io/npm/v/dob-react.svg?style=flat)](https://www.npmjs.com/package/dob-react) [![code coverage](https://img.shields.io/codecov/c/github/dobjs/dob-react/master.svg)](https://codecov.io/github/dobjs/dob-react)
 
-React bindings for dob
+React bindings for dob.
 
 Design idea from [Mobx Implementation](https://github.com/ascoders/blog/issues/16)
 

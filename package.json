@@ -1,6 +1,6 @@
 {
   "name": "dob-react",
-  "version": "2.4.4",
+  "version": "2.4.5",
   "description": "",
   "main": "built/index.js",
   "scripts": {
@@ -18,7 +18,7 @@
   },
   "run-react": {
     "entrys": [
-      "src/demo/index.tsx"
+      "src/index"
     ],
     "dlls": [
       "react",
@@ -74,7 +74,7 @@
   },
   "dependencies": {
     "create-react-class": "^15.6.2",
-    "dob": "^2.5.5",
+    "dob": "^2.5.6",
     "prop-types": "^15.6.0",
     "shallow-eq": "^1.0.5"
   }
