@@ -1,6 +1,6 @@
 {
   "name": "dob-react",
-  "version": "2.4.7",
+  "version": "2.4.8",
   "description": "",
   "main": "built/index.js",
   "scripts": {
@@ -18,6 +18,9 @@
   },
   "run-react": {
     "entrys": [
+      "demo/single"
+    ],
+    "productionEntrys": [
       "src/index"
     ],
     "dlls": [
@@ -45,7 +48,6 @@
     "@types/prop-types": "*"
   },
   "devDependencies": {
-    "@types/node": "*",
     "@types/react": "*",
     "@types/react-dom": "*",
     "@types/react-router-dom": "*",
