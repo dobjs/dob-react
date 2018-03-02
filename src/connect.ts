@@ -177,6 +177,10 @@ function mixinLifecycleEvents(target: any) {
 }
 
 function mixinAndInject(componentClass: any, extraInjection: Object | Function = {}): any {
+    if (componentClass && componentClass.WrappedComponent) {
+        return mixinAndInject(componentClass.WrappedComponent, extraInjection)
+    }
+
     if (!isReactFunction(componentClass)) {
         // stateless react function
         return mixinAndInject(
