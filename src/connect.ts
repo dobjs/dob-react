@@ -176,10 +176,15 @@ function mixinLifecycleEvents(target: any) {
     }
 }
 
-function mixinAndInject(componentClass: any, extraInjection: Object | Function = {}): any {
+function getWrappedComponent(componentClass: any): any {
     if (componentClass && componentClass.WrappedComponent) {
-        return mixinAndInject(componentClass.WrappedComponent, extraInjection)
+        return getWrappedComponent(componentClass.WrappedComponent)
     }
+    return componentClass
+}
+
+function mixinAndInject(componentClass: any, extraInjection: Object | Function = {}): any {
+    const wrappedComponentClass = getWrappedComponent(componentClass)
 
     if (!isReactFunction(componentClass)) {
         // stateless react function
@@ -188,6 +193,9 @@ function mixinAndInject(componentClass: any, extraInjection: Object | Function =
                 displayName: componentClass.displayName || componentClass.name,
                 propTypes: componentClass.propTypes,
                 contextTypes: componentClass.contextTypes,
+                statics: {
+                    WrappedComponent: wrappedComponentClass
+                },
                 getDefaultProps: function () {
                     return componentClass.defaultProps;
                 },
@@ -199,8 +207,7 @@ function mixinAndInject(componentClass: any, extraInjection: Object | Function =
         )
     }
 
-    const target = componentClass.prototype || componentClass
-    mixinLifecycleEvents(target)
+    mixinLifecycleEvents(wrappedComponentClass.prototype || wrappedComponentClass)
 
     return class InjectWrapper extends React.Component<any, any>{
         // 取 context
