@@ -1,36 +1,36 @@
-import * as React from "react"
-import * as ReactDOM from "react-dom"
-import { Reaction } from "dob"
-import { globalState } from "./global-state"
-import shallowEqual from "shallow-eq"
+import * as React from "react";
+import * as ReactDOM from "react-dom";
+import { Reaction } from "dob";
+import { globalState } from "./global-state";
+import shallowEqual from "shallow-eq";
 
-const PropTypes = require("prop-types")
-const createClass = require("create-react-class")
+const PropTypes = require("prop-types");
+const createClass = require("create-react-class");
 
 /**
  * 组件是否已销毁
  */
-const isUmount = Symbol()
+const isUmount = Symbol();
 
 /**
  * observer 对象存放的 key
  */
-const reactionKey = Symbol()
+const reactionKey = Symbol();
 
 /**
  * render 次数
  */
-const renderCountKey = Symbol()
+const renderCountKey = Symbol();
 
 interface ReactiveMixin {
-  [lifecycleName: string]: any
+  [lifecycleName: string]: any;
 }
 
 /**
  * baseRender 初始化未渲染状态
  * 之所以不用 null 判断是否有渲染，因为 render 函数本身就可以返回 null，所以只好用 symbol 准确判断是否执行了 render
  */
-const emptyBaseRender = Symbol()
+const emptyBaseRender = Symbol();
 
 /**
  * 报告该组件触发了 dob 渲染
@@ -40,12 +40,12 @@ function reportTrack(reactElement: React.ReactElement<any>, debugId: number) {
     !globalState.useDebug ||
     !reactElement.props[globalState.handleReRender]
   ) {
-    return
+    return;
   }
 
   Promise.resolve().then(() => {
-    reactElement.props[globalState.handleReRender](debugId)
-  })
+    reactElement.props[globalState.handleReRender](debugId);
+  });
 }
 
 /**
@@ -53,24 +53,24 @@ function reportTrack(reactElement: React.ReactElement<any>, debugId: number) {
  */
 function patch(target: any, funcName: string, runMixinFirst = false) {
   // 原始生命周期函数
-  const base = target[funcName]
+  const base = target[funcName];
   // 待聚合的生命周期函数
-  const mixinFunc = reactiveMixin[funcName]
+  const mixinFunc = reactiveMixin[funcName];
   if (!base) {
     // 如果没有原始生命周期函数，直接覆盖即可
-    target[funcName] = mixinFunc
+    target[funcName] = mixinFunc;
   } else {
     // 将两个函数串起来执行
     target[funcName] =
       runMixinFirst === true
         ? function(this: any, ...args: any[]) {
-            mixinFunc.apply(this, args)
-            base.apply(this, args)
+            mixinFunc.apply(this, args);
+            base.apply(this, args);
           }
         : function(this: any, ...args: any[]) {
-            base.apply(this, args)
-            mixinFunc.apply(this, args)
-          }
+            base.apply(this, args);
+            mixinFunc.apply(this, args);
+          };
   }
 }
 
@@ -85,120 +85,125 @@ const reactiveMixin: ReactiveMixin = {
       this.name ||
       (this.constructor &&
         ((this.constructor as any).displayName || this.constructor.name)) ||
-      "<component>"
+      "<component>";
 
     // 当前节点 id
     const rootNodeID =
-      this._reactInternalInstance && this._reactInternalInstance._rootNodeID
+      this._reactInternalInstance && this._reactInternalInstance._rootNodeID;
 
     // 是否在渲染期间
-    let isRenderingPending = false
+    let isRenderingPending = false;
 
     // 原始 render
-    const baseRender = this.render.bind(this)
+    const baseRender = this.render.bind(this);
 
-    let renderResult: any = emptyBaseRender
+    let renderResult: any = emptyBaseRender;
 
     // 核心 reaction
-    let reaction: Reaction
+    let reaction: Reaction;
 
     // 初始化 render
     const initialRender = () => {
       reaction = new Reaction(`${initialName}.render`, () => {
         if (isRenderingPending) {
-          return
+          return;
         }
-        isRenderingPending = true
+        isRenderingPending = true;
 
         // 执行经典的 componentWillReact
         typeof this.componentWillReact === "function" &&
           this[renderCountKey] &&
-          this.componentWillReact()
+          this.componentWillReact();
 
         // 如果组件没有被销毁，尝试调用 forceUpdate
         // 而且第一次渲染不会调用 forceUpdate
         if (!this[isUmount] && this[renderCountKey]) {
-          React.Component.prototype.forceUpdate.call(this)
+          React.Component.prototype.forceUpdate.call(this);
         }
 
-        isRenderingPending = false
-      })
+        isRenderingPending = false;
+      });
 
-      this[reactionKey] = reaction
+      this[reactionKey] = reaction;
 
       // 之后都用 reactiveRender 作 render
-      this.render = reactiveRender
+      this.render = reactiveRender;
 
-      return reactiveRender()
-    }
+      return reactiveRender();
+    };
 
     const reactiveRender = () => {
       reaction.track(debugId => {
-        renderResult = baseRender()
+        renderResult = baseRender();
 
-        reportTrack(this as React.ReactElement<any>, debugId)
-      })
+        reportTrack(this as React.ReactElement<any>, debugId);
+      });
 
-      this[renderCountKey] ? this[renderCountKey]++ : (this[renderCountKey] = 1)
+      this[renderCountKey]
+        ? this[renderCountKey]++
+        : (this[renderCountKey] = 1);
 
       // 如果 observe 跑过了 renderResult，就不要再执行一遍 baseRender，防止重复调用 render
       if (renderResult !== emptyBaseRender) {
-        const tempResult = renderResult
+        const tempResult = renderResult;
 
         // 防止 setState 这种没有通过 observe 触发的情况，不应该直接用结果，
         // 所以要每次清空，如果不是 observe，而是 setState 触发 render，就执行 baseRender
-        renderResult = emptyBaseRender
+        renderResult = emptyBaseRender;
 
-        return tempResult
+        return tempResult;
       }
 
-      return baseRender()
-    }
+      return baseRender();
+    };
 
     // 默认用初始化 render
-    this.render = initialRender
+    this.render = initialRender;
   },
   componentWillUnmount: function() {
     // 取消 observe 监听
-    this[reactionKey] && this[reactionKey].dispose()
+    this[reactionKey] && this[reactionKey].dispose();
 
-    this[isUmount] = true
+    this[isUmount] = true;
   },
   shouldComponentUpdate: function(nextProps: any, nextState: any) {
     // 任何 state 修改都会重新 render
     if (!shallowEqual(this.state, nextState)) {
-      return true
+      return true;
     }
 
-    return !shallowEqual(this.props, nextProps)
+    return !shallowEqual(this.props, nextProps);
   }
-}
+};
 
 /**
  * 聚合生命周期
  */
 function mixinLifecycleEvents(target: any) {
-  patch(target, "componentWillMount", true)
-  patch(target, "componentWillUnmount")
+  patch(target, "componentWillMount", true);
+  patch(target, "componentWillUnmount");
 
   if (!target.shouldComponentUpdate && !target.isPureReactComponent) {
     // 只有原对象没有 shouldComponentUpdate 的时候，才使用 mixins
-    target.shouldComponentUpdate = reactiveMixin.shouldComponentUpdate
+    target.shouldComponentUpdate = reactiveMixin.shouldComponentUpdate;
   }
 }
 
 function getWrappedComponent(componentClass: any): any {
   if (componentClass && componentClass.WrappedComponent) {
-    return getWrappedComponent(componentClass.WrappedComponent)
+    return getWrappedComponent(componentClass.WrappedComponent);
   }
-  return componentClass
+  return componentClass;
 }
 
 function mixinAndInject(
   componentClass: any,
-  extraInjection: Object | Function = {}
+  extraInjection: Object | Function = {},
+  isGetWrappedComponent = true
 ): any {
-  const wrappedComponentClass = getWrappedComponent(componentClass)
+  const wrappedComponentClass = isGetWrappedComponent
+    ? getWrappedComponent(componentClass)
+    : componentClass;
 
   if (!isReactFunction(componentClass)) {
     // stateless react function
@@ -211,26 +216,29 @@ function mixinAndInject(
           WrappedComponent: wrappedComponentClass
         },
         getDefaultProps: function() {
-          return componentClass.defaultProps
+          return componentClass.defaultProps;
         },
         render: function() {
-          return componentClass.call(this, this.props, this.context)
+          return componentClass.call(this, this.props, this.context);
         }
       }),
-      extraInjection
-    )
+      extraInjection,
+      false
+    );
   }
 
-  mixinLifecycleEvents(wrappedComponentClass.prototype || wrappedComponentClass)
+  mixinLifecycleEvents(
+    wrappedComponentClass.prototype || wrappedComponentClass
+  );
 
   return class InjectWrapper extends React.Component<any, any> {
     // 取 context
     static contextTypes = {
       dyStores: PropTypes.object
-    }
+    };
 
     render() {
-      let wrappedComponent: React.ReactElement<any> | null = null
+      let wrappedComponent: React.ReactElement<any> | null = null;
 
       if (typeof extraInjection === "object") {
         wrappedComponent = React.createElement(componentClass, {
@@ -238,14 +246,14 @@ function mixinAndInject(
           ...this.context.dyStores,
           ...this.props,
           ...extraInjection
-        })
+        });
       } else if (typeof extraInjection === "function") {
         wrappedComponent = React.createElement(componentClass, {
           ref: this.props.wrappedComponentRef,
           ...this.context.dyStores,
           ...this.props,
           ...extraInjection(this.context.dyStores)
-        })
+        });
       }
 
       if (globalState.useDebug) {
@@ -254,13 +262,13 @@ function mixinAndInject(
             globalState.DebugWrapper,
             { ref: this.props.wrappedComponentRef },
             wrappedComponent
-          )
+          );
         }
       }
 
-      return wrappedComponent
+      return wrappedComponent;
     }
-  }
+  };
 }
 
 function isReactFunction(obj: any) {
@@ -270,11 +278,11 @@ function isReactFunction(obj: any) {
       obj.isReactClass ||
       React.Component.isPrototypeOf(obj)
     ) {
-      return true
+      return true;
     }
   }
 
-  return false
+  return false;
 }
 
 /**
@@ -284,35 +292,35 @@ export default function Connect(
   target: any,
   propertyKey?: string,
   descriptor?: PropertyDescriptor
-): any
-export default function Connect(injectExtension: any): any
+): any;
+export default function Connect(injectExtension: any): any;
 export default function Connect<T = {}>(
   mapStateToProps?: (state?: T) => any
-): any
+): any;
 export default function Connect(target: any): any {
   // usage: @Connect
   if (isReactFunction(target)) {
-    return mixinAndInject(target)
+    return mixinAndInject(target);
   }
 
   // usage: @Connect(object)
   if (typeof target === "object") {
     return (realComponentClass: any) => {
-      return mixinAndInject(realComponentClass, target)
-    }
+      return mixinAndInject(realComponentClass, target);
+    };
   }
 
   // usage: @Connect(function)
   if (typeof target === "function") {
     return (realComponentClass: any) => {
-      return mixinAndInject(realComponentClass, target)
-    }
+      return mixinAndInject(realComponentClass, target);
+    };
   }
 
   // usage: Connect()(App)
   if (!target) {
     return (realComponentClass: any) => {
-      return mixinAndInject(realComponentClass)
-    }
+      return mixinAndInject(realComponentClass);
+    };
   }
 }
