@@ -10,17 +10,17 @@ const createClass = require("create-react-class");
 /**
  * 组件是否已销毁
  */
-const isUmount = Symbol();
+const isUmount = Symbol() as any;
 
 /**
  * observer 对象存放的 key
  */
-const reactionKey = Symbol();
+const reactionKey = Symbol() as any;
 
 /**
  * render 次数
  */
-const renderCountKey = Symbol();
+const renderCountKey = Symbol() as any;
 
 interface ReactiveMixin {
   [lifecycleName: string]: any;

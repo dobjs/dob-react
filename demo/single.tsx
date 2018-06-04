@@ -9,7 +9,7 @@ class Store {
 }
 
 class Action {
-  @inject(Store) store: Store;
+  @inject(Store) store!: Store;
 
   changeName = () => {
     this.store.name = 456;

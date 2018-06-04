@@ -1,25 +1,32 @@
 {
   "name": "dob-react",
-  "version": "2.4.14",
+  "version": "2.4.15",
   "description": "",
   "main": "built/src/index.js",
   "scripts": {
     "test": "tsc && nyc --reporter=lcov --reporter=text --reporter=json ava",
-    "posttest":
-      "codecov -f coverage/*.json -t e25fe2bb-a132-42cf-b126-6e62b7c7517e",
-    "prepublish":
-      "rm -rf built && tsc && babel built --out-dir built && npm run build",
+    "posttest": "codecov -f coverage/*.json -t e25fe2bb-a132-42cf-b126-6e62b7c7517e",
+    "prepublish": "rm -rf built && tsc && babel built --out-dir built && npm run build",
     "start": "run-react develop",
     "build": "run-react production"
   },
   "types": "src/index.ts",
   "ava": {
-    "files": ["built/**/*.test.js"]
+    "files": [
+      "built/**/*.test.js"
+    ]
   },
   "run-react": {
-    "entrys": ["demo/single"],
-    "productionEntrys": ["src/index"],
-    "dlls": ["react", "react-dom"],
+    "entrys": [
+      "demo/single"
+    ],
+    "productionEntrys": [
+      "src/index"
+    ],
+    "dlls": [
+      "react",
+      "react-dom"
+    ],
     "production": {
       "path": "built",
       "filename": "bundle.js"
@@ -69,7 +76,7 @@
   },
   "dependencies": {
     "create-react-class": "^15.6.2",
-    "dob": "^2.5.7",
+    "dob": "^2.5.9",
     "prop-types": "^15.6.0",
     "shallow-eq": "^1.0.5"
   }

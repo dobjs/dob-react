@@ -8,12 +8,10 @@
     "jsx": "react",
     "sourceMap": true,
     "outDir": "built",
+    "skipLibCheck": true,
     "moduleResolution": "node",
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true
   },
-  "exclude": [
-    "node_modules",
-    "built"
-  ]
+  "exclude": ["node_modules", "built"]
 }

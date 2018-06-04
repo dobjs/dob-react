@@ -37,7 +37,7 @@ class Store {
 }
 
 class Action {
-  @inject(Store) store: Store
+  @inject(Store) store!: Store
 
   changeParam = () => {
     this.store.param = 'xyz' + Math.random().toString()
