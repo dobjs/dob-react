@@ -16,22 +16,6 @@
       "built/**/*.test.js"
     ]
   },
-  "run-react": {
-    "entrys": [
-      "demo/single"
-    ],
-    "productionEntrys": [
-      "src/index"
-    ],
-    "dlls": [
-      "react",
-      "react-dom"
-    ],
-    "production": {
-      "path": "built",
-      "filename": "bundle.js"
-    }
-  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/ascoders/dob-react.git"
@@ -48,12 +32,7 @@
     "@types/prop-types": "*"
   },
   "devDependencies": {
-    "@types/react": "*",
-    "@types/react-dom": "*",
-    "@types/react-router-dom": "*",
     "@types/react-test-renderer": "*",
-    "@types/webpack": "*",
-    "ava": "^0.18.2",
     "babel-cli": "^6.26.0",
     "babel-plugin-transform-class-properties": "^6.24.1",
     "babel-plugin-transform-es2015-classes": "^6.24.1",
