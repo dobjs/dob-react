@@ -306,6 +306,11 @@ export default function Connect(target: any): any {
   // usage: @Connect(object)
   if (typeof target === "object") {
     return (realComponentClass: any) => {
+      if (!realComponentClass) {
+        // Error
+        return null;
+      }
+
       return mixinAndInject(realComponentClass, target);
     };
   }
