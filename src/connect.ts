@@ -201,6 +201,10 @@ function mixinAndInject(
   extraInjection: Object | Function = {},
   isGetWrappedComponent = true
 ): any {
+  if (!componentClass) {
+    return null;
+  }
+
   const wrappedComponentClass = isGetWrappedComponent
     ? getWrappedComponent(componentClass)
     : componentClass;
